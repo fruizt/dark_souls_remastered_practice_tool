@@ -1,4 +1,5 @@
 mod inject;
+mod pointers;
 
 fn main() {
     let game_process = inject::get_process_by_name("bhd.exe");
@@ -8,6 +9,10 @@ fn main() {
         println!("Error getting handle");
     }
 }
+
+// fn set_pistol_ammo_to_max() {
+//     let pointer_chains = pointers::PointerChain::new();
+// }
 
 // start a GUI
 

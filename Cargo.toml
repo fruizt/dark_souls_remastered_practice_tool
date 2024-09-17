@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 
 [dependencies.windows]
-version = "0.52.0"
+version = "0.54.0"
 features = [
     "Data_Xml_Dom",
     "Win32_Foundation",

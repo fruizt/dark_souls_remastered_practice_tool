@@ -1,27 +1,72 @@
+use std::ops::{BitAnd, BitOr, BitXor, Not};
+
 use windows::Win32::Foundation::HANDLE;
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
+use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 use windows::Win32::System::Threading::GetCurrentProcess;
 
-use windows::Win32::System::LibraryLoader::GetModuleHandleA;
+use crate::prelude::BaseAddresses;
+
 pub struct PointerChains {
     pub pistol_ammo: Bitflag<u8>,
 }
 
-// impl Default for PointerChains {
-//     fn default() -> Self {
-//         Self::new()
-//     }
-// }
+impl Default for PointerChains {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
-// impl PointerChains {
-//     pub fn new() -> Self {
-//         PointerChains {
-//             pistol_ammo:
-//         }
-//     }
-// }
+impl From<BaseAddresses> for PointerChains {
+    fn from(value: BaseAddresses) -> Self {
+        PointerChains {
+            pistol_ammo: Bitflag::new(PointerChain::new(&[value.pistol_ammo]), 0b1),
+        }
+    }
+}
+
+impl PointerChains {
+    pub fn new() -> Self {
+        let base_module_address = unsafe { GetModuleHandleA(None) }.unwrap().0 as usize;
+        let base_addresses = BaseAddresses {
+            pistol_ammo: 0x0098A1D8,
+        }
+        .with_module_base_addr(base_module_address);
+        base_addresses.into()
+    }
+}
 
 pub struct Bitflag<T>(PointerChain<T>, T);
+
+impl<T> Bitflag<T>
+where
+    T: BitXor<Output = T>
+        + BitAnd<Output = T>
+        + BitOr<Output = T>
+        + Not<Output = T>
+        + PartialEq
+        + Copy,
+{
+    pub fn new(c: PointerChain<T>, mask: T) -> Self {
+        Bitflag(c, mask)
+    }
+
+    pub fn toggle(&self) {
+        if let Some(x) = self.0.read() {
+            self.0.write(x ^ self.1);
+        }
+    }
+
+    pub fn get(&self) -> Option<bool> {
+        self.0.read().map(|x| (x & self.1) == self.1)
+    }
+
+    pub fn set(&self, flag: bool) {
+        if let Some(x) = self.0.read() {
+            self.0.write(if flag { x | self.1 } else { x & !self.1 });
+        }
+    }
+}
 
 #[derive(Clone, Debug)]
 pub struct PointerChain<T> {
@@ -29,10 +74,6 @@ pub struct PointerChain<T> {
     base: *mut T,
     offsets: Vec<usize>,
 }
-
-/*
-
-
 
 impl<T> PointerChain<T> {
     pub fn new(chain: &[usize]) -> PointerChain<T> {
@@ -103,4 +144,3 @@ impl<T> PointerChain<T> {
         }
     }
 }
-*/

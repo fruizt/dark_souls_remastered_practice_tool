@@ -1,6 +1,7 @@
+pub mod base_addresses;
 pub mod inject;
 pub mod pointers;
 
-pub mod Prelude {
-    pub use crate::pointers::*;
+pub mod prelude {
+    pub use crate::base_addresses::*;
 }

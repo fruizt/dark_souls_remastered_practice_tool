@@ -3,6 +3,10 @@ name = "resident_evil_1_trainer"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "resident_evil_thing"
+path = "src/main.rs"
+
 [dependencies]
 
 [dependencies.windows]

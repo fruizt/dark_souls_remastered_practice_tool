@@ -1,5 +1,6 @@
 mod inject;
 mod pointers;
+mod base_addresses;
 
 fn main() {
     let game_process = inject::get_process_by_name("bhd.exe");

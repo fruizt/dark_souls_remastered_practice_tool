@@ -9,3 +9,7 @@ impl BaseAddresses {
         }
     }
 }
+
+pub const BASE_ADDRESSES: BaseAddresses = BaseAddresses {
+    pistol_ammo: 0x0098A1D8,
+};

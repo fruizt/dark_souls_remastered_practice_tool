@@ -5,7 +5,7 @@ use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcess
 use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 use windows::Win32::System::Threading::GetCurrentProcess;
 
-use crate::prelude::BaseAddresses;
+use crate::base_addresses::*;
 
 pub struct PointerChains {
     pub pistol_ammo: Bitflag<u8>,
@@ -28,11 +28,9 @@ impl From<BaseAddresses> for PointerChains {
 impl PointerChains {
     pub fn new() -> Self {
         let base_module_address = unsafe { GetModuleHandleA(None) }.unwrap().0 as usize;
-        let base_addresses = BaseAddresses {
-            pistol_ammo: 0x0098A1D8,
-        }
-        .with_module_base_addr(base_module_address);
-        base_addresses.into()
+        BASE_ADDRESSES
+            .with_module_base_addr(base_module_address)
+            .into()
     }
 }
 

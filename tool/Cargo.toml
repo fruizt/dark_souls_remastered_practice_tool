@@ -4,12 +4,12 @@ version.workspace = true
 edition = "2021"
 
 [[bin]]
-name = "resident_evil_1_trainer"
+name = "dark_souls_remastered_tool_libraries"
 path = "src/main.rs"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-name = "resident_evil_1_trainer_tool"
+name = "dark_souls_remastered_tool"
 
 
 [dependencies]

@@ -1,0 +1,3 @@
+[[bin]]
+name = "resident_evil_thing"
+path = "src/main.rs"

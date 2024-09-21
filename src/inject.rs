@@ -17,14 +17,17 @@ use windows::Win32::System::Threading::{
     PROCESS_ALL_ACCESS,
 };
 
+/// A process, open with the permissions appropriate for injection.
 pub struct Process(HANDLE);
 
 impl Process {
-    // Look for the game
-    pub fn get_process_by_name(name: &str) -> Result<HANDLE> {
-        unsafe { get_process_by_name64(name) }
+    /// Retrieve the process ID by executable name, returning the first match,
+    /// and open it with the appropriate permissions.
+    pub fn get_process_by_name(name: &str) -> Result<Self> {
+        unsafe { get_process_by_name64(name).map(Self) }
     }
 
+    /// Inject the DLL in the process.
     pub fn inject(&self, dll_path: PathBuf) -> Result<()> {
         let proc_addr =
             unsafe { GetProcAddress(GetModuleHandleW(w!("Kernel32"))?, s!("LoadLibraryW")) };

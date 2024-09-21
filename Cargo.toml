@@ -3,6 +3,14 @@ name = "resident_evil_1_trainer"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "resident_evil_1_trainer"
+path = "src/main.rs"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "resident_evil_1_trainer_tool"
+
 [dependencies]
 
 [dependencies.windows]

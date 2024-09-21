@@ -21,11 +21,11 @@ fn main() {
 fn perform_injection() -> Result<(), String> {
     let mut dll_path = std::env::current_exe().unwrap();
     dll_path.pop();
-    dll_path.push("jdsd_dsiii_practice_tool.dll");
+    dll_path.push("resident_evil_1_trainer_tool.dll");
 
     if !dll_path.exists() {
         dll_path.pop();
-        dll_path.push("libjdsd_dsiii_practice_tool");
+        dll_path.push("resident_evil_1_trainer_tool");
         dll_path.set_extension("dll");
     }
 

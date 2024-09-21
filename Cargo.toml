@@ -12,6 +12,7 @@ crate-type = ["cdylib", "rlib"]
 name = "resident_evil_1_trainer_tool"
 
 [dependencies]
+once_cell = "1.19.0"
 
 [dependencies.windows]
 version = "0.54.0"
@@ -25,5 +26,6 @@ features = [
     "Win32_System_Diagnostics_ToolHelp",
     "Win32_UI_WindowsAndMessaging",
     "Win32_System_Memory"
+    "Win32_System_SystemServices",
 ]
 

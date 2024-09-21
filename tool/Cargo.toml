@@ -1,0 +1,17 @@
+[package]
+name = "resident_evil_trainer"
+version.workspace = true
+edition = "2021"
+
+[[bin]]
+name = "resident_evil_1_trainer"
+path = "src/main.rs"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "resident_evil_1_trainer_tool"
+
+
+[dependencies]
+once_cell.workspace = true
+windows.workspace = true

@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-use hudhook::tracing::{debug, error, info};
+use hudhook::tracing::error;
 use hudhook::ImguiRenderLoop;
 use imgui::Condition;
 use tracing_subscriber::filter::LevelFilter;
@@ -67,14 +67,14 @@ impl Tool {
                     .init();
             }
             e => {
-                // tracing_subscriber::fmt()
-                //     .with_max_level(config.settings.log_level.inner())
-                //     .with_thread_ids(true)
-                //     .with_file(true)
-                //     .with_line_number(true)
-                //     .with_thread_names(true)
-                //     .with_ansi(true)
-                //     .init();
+                tracing_subscriber::fmt()
+                    .with_max_level(LevelFilter::DEBUG)
+                    .with_thread_ids(true)
+                    .with_file(true)
+                    .with_line_number(true)
+                    .with_thread_names(true)
+                    .with_ansi(true)
+                    .init();
 
                 match e {
                     None => error!("Could not construct log file path"),

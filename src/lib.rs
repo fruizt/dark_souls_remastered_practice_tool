@@ -1,11 +1,9 @@
+mod util;
+
 use once_cell::sync::Lazy;
 
 use windows::Win32::Foundation::HINSTANCE;
 use windows::Win32::System::SystemServices::DLL_PROCESS_ATTACH;
-
-pub mod base_addresses;
-pub mod inject;
-pub mod pointers;
 
 #[no_mangle]
 #[allow(clippy::missing_safety_doc)]

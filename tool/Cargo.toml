@@ -13,5 +13,8 @@ name = "resident_evil_1_trainer_tool"
 
 
 [dependencies]
+tracing-subscriber = "0.3.17"
+hudhook.workspace = true
+imgui.workspace = true
 once_cell.workspace = true
 windows.workspace = true

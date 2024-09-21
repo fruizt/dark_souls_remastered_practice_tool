@@ -2,18 +2,39 @@ mod inject;
 
 use std::io;
 
+use tracing_subscriber::filter::LevelFilter;
+
+use windows::core::PCSTR;
+use windows::Win32::Foundation::HWND;
+use windows::Win32::UI::WindowsAndMessaging::{
+    MessageBoxA, IDYES, MB_ICONERROR, MB_ICONINFORMATION, MB_OK, MB_YESNO,
+};
+
 fn err_to_string<T: std::fmt::Display>(e: T) -> String {
     format!("Error: {}", e)
 }
 
 fn main() {
-    let injection_result = perform_injection();
-    if let Err(e) = injection_result {
-        println!("Error While injecting {}", e);
-    } else {
-        println!("Injection Performed");
+    tracing_subscriber::fmt()
+        .with_max_level(LevelFilter::TRACE)
+        .with_thread_ids(true)
+        .with_file(true)
+        .with_line_number(true)
+        .with_thread_names(true)
+        .init();
+
+    if let Err(e) = perform_injection() {
+        let error_msg = format!("{}\0", e);
+        unsafe {
+            MessageBoxA(
+                HWND(0),
+                PCSTR(error_msg.as_str().as_ptr()),
+                PCSTR("Error\0".as_ptr()),
+                MB_OK | MB_ICONERROR,
+            );
+        }
     }
-    io::stdin().read_line(&mut String::new()).unwrap();
+    // io::stdin().read_line(&mut String::new()).unwrap();
 }
 
 fn perform_injection() -> Result<(), String> {

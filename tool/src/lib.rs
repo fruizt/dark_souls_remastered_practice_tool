@@ -64,14 +64,6 @@ pub unsafe extern "stdcall" fn DllMain(hmodule: HINSTANCE, reason: u32, _: *mut 
         trace!("DllMain()");
 
         Lazy::force(&DIRECTINPUT8CREATE);
-        thread::spawn(move || {
-            MessageBoxA(
-                HWND(0),
-                PCSTR("DLL Injected!".as_ptr()),
-                PCSTR("DLL Injection".as_ptr()),
-                MB_OK,
-            );
-            start_tool(hmodule)
-        });
+        thread::spawn(move || start_tool(hmodule));
     }
 }

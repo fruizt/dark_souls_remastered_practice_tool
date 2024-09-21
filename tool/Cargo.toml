@@ -15,6 +15,10 @@ name = "dark_souls_remastered_tool_binaries"
 [dependencies]
 tracing-subscriber = "0.3.17"
 log-panics = { version = "2.0.0", features = ["with-backtrace"] }
+toml = "0.5.6"
+
+serde.workspace = true
+serde_json.workspace = true
 hudhook.workspace = true
 imgui.workspace = true
 once_cell.workspace = true

@@ -1,15 +1,87 @@
-use std::mem;
+use std::ffi::c_void;
+use std::mem::{self, size_of};
+use std::path::PathBuf;
 
-use windows::core::{Error, Result, HRESULT, HSTRING};
-use windows::Win32::Foundation::{CloseHandle, BOOL, HANDLE};
+use windows::core::{s, w, Error, Result, HRESULT, HSTRING};
+use windows::Win32::Foundation::{CloseHandle, BOOL, HANDLE, MAX_PATH};
+use windows::Win32::System::Diagnostics::Debug::WriteProcessMemory;
 use windows::Win32::System::Diagnostics::ToolHelp::{
     CreateToolhelp32Snapshot, Process32FirstW, Process32NextW, PROCESSENTRY32W, TH32CS_SNAPPROCESS,
 };
-use windows::Win32::System::Threading::{OpenProcess, PROCESS_ALL_ACCESS};
+use windows::Win32::System::LibraryLoader::{GetModuleHandleW, GetProcAddress};
+use windows::Win32::System::Memory::{
+    VirtualAllocEx, VirtualFreeEx, MEM_COMMIT, MEM_RELEASE, MEM_RESERVE, PAGE_READWRITE,
+};
+use windows::Win32::System::Threading::{
+    CreateRemoteThread, GetExitCodeThread, OpenProcess, WaitForSingleObject, INFINITE,
+    PROCESS_ALL_ACCESS,
+};
 
-// Look for the game
-pub fn get_process_by_name(name: &str) -> Result<HANDLE> {
-    unsafe { get_process_by_name64(name) }
+pub struct Process(HANDLE);
+
+impl Process {
+    // Look for the game
+    pub fn get_process_by_name(name: &str) -> Result<HANDLE> {
+        unsafe { get_process_by_name64(name) }
+    }
+
+    pub fn inject(&self, dll_path: PathBuf) -> Result<()> {
+        let proc_addr =
+            unsafe { GetProcAddress(GetModuleHandleW(w!("Kernel32"))?, s!("LoadLibraryW")) };
+        let dll_path = HSTRING::from(dll_path.canonicalize().unwrap().as_path());
+        let dll_path_buf = unsafe {
+            VirtualAllocEx(
+                self.0,
+                None,
+                (MAX_PATH as usize) * size_of::<u16>(),
+                MEM_RESERVE | MEM_COMMIT,
+                PAGE_READWRITE,
+            )
+        };
+
+        let mut bytes_written = 0usize;
+        let res = unsafe {
+            WriteProcessMemory(
+                self.0,
+                dll_path_buf,
+                dll_path.as_ptr() as *const c_void,
+                (MAX_PATH as usize) * size_of::<u16>(),
+                Some(&mut bytes_written),
+            )
+        };
+
+        let thread = unsafe {
+            CreateRemoteThread(
+                self.0,
+                None,
+                0,
+                proc_addr.map(|proc_addr| {
+                    mem::transmute::<
+                        unsafe extern "system" fn() -> isize,
+                        unsafe extern "system" fn(*mut c_void) -> u32,
+                    >(proc_addr)
+                }),
+                Some(dll_path_buf),
+                0,
+                None,
+            )
+        }?;
+
+        unsafe {
+            WaitForSingleObject(thread, INFINITE);
+            let mut exit_code = 0u32;
+            GetExitCodeThread(thread, &mut exit_code as *mut u32)?;
+            CloseHandle(thread)?;
+            VirtualFreeEx(self.0, dll_path_buf, 0, MEM_RELEASE)?;
+
+            Ok(())
+        }
+    }
+
+    /// Retrieve the process handle.
+    pub fn handle(&self) -> HANDLE {
+        self.0
+    }
 }
 
 unsafe fn get_process_by_name64(name_str: &str) -> Result<HANDLE> {

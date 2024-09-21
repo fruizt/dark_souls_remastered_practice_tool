@@ -1,5 +1,5 @@
 [package]
-name = "resident_evil_trainer"
+name = "dark_souls_remastered_tool"
 version.workspace = true
 edition = "2021"
 

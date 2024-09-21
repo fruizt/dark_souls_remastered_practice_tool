@@ -3,6 +3,8 @@ mod tool;
 mod util;
 mod config;
 mod others;
+mod pointers;
+mod base_addresses;
 
 use tool::Tool;
 

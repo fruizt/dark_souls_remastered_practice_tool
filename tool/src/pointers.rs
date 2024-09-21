@@ -73,6 +73,9 @@ pub struct PointerChain<T> {
     offsets: Vec<usize>,
 }
 
+unsafe impl<T> Send for PointerChain<T> {}
+unsafe impl<T> Sync for PointerChain<T> {}
+
 impl<T> PointerChain<T> {
     pub fn new(chain: &[usize]) -> PointerChain<T> {
         let mut it = chain.iter();

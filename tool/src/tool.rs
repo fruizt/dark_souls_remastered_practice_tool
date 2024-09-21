@@ -1,16 +1,25 @@
 use std::sync::Mutex;
 
-use hudhook::tracing::error;
+use hudhook::tracing::{debug, error};
 use hudhook::ImguiRenderLoop;
 use imgui::Condition;
-use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::prelude::*;
 
-use crate::config;
-use crate::config::Config;
+use crate::config::{Config, Settings};
+use crate::pointers::PointerChains;
 use crate::util;
 
-pub struct Tool(String);
+enum UiState {
+    MenuOpen,
+    Closed,
+    Hidden,
+}
+
+pub(crate) struct Tool {
+    settings: Settings,
+    pointers: PointerChains,
+    ui_state: UiState,
+}
 
 impl Tool {
     pub fn new() -> Self {
@@ -86,7 +95,18 @@ impl Tool {
             }
         }
 
-        Tool("OMG".to_string())
+        if let Some(err) = config_err {
+            debug!("{:?}", err);
+        }
+
+        let pointers = PointerChains::new();
+        let settings = config.settings.clone();
+
+        Tool {
+            settings,
+            pointers,
+            ui_state: UiState::MenuOpen,
+        }
     }
 
     fn render_visible(&mut self, ui: &imgui::Ui) {

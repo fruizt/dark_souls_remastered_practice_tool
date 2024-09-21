@@ -1,2 +1,2 @@
-# resident_evil_1_trainer
-A resident evil 1 trainer but made in rust
+# Dark Souls Remaster Trainer
+A Dark Souls Remaster trainer but made in rust

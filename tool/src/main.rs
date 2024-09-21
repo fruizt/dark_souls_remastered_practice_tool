@@ -41,11 +41,11 @@ fn main() {
 fn perform_injection() -> Result<(), String> {
     let mut dll_path = std::env::current_exe().unwrap();
     dll_path.pop();
-    dll_path.push("resident_evil_1_trainer_tool.dll");
+    dll_path.push("dark_souls_remastered_tool_binaries.dll");
 
     if !dll_path.exists() {
         dll_path.pop();
-        dll_path.push("resident_evil_1_trainer_tool");
+        dll_path.push("dark_souls_remastered_tool_binaries");
         dll_path.set_extension("dll");
     }
 

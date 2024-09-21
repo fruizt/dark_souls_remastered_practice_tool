@@ -1,5 +1,6 @@
 // mod util;
 mod tool;
+mod util;
 
 use tool::Tool;
 
@@ -8,7 +9,7 @@ use std::ffi::c_void;
 use std::thread;
 use windows::Win32::UI::WindowsAndMessaging::{MessageBoxA, MB_OK};
 
-use hudhook::hooks::dx9::ImguiDx9Hooks;
+use hudhook::hooks::dx11::ImguiDx11Hooks;
 use hudhook::tracing::{error, trace};
 use hudhook::{eject, Hudhook};
 
@@ -47,7 +48,7 @@ fn start_tool(hmodule: HINSTANCE) {
     let tool = Tool::new();
 
     if let Err(e) = Hudhook::builder()
-        .with::<ImguiDx9Hooks>(tool)
+        .with::<ImguiDx11Hooks>(tool)
         .with_hmodule(hmodule)
         .build()
         .apply()
@@ -62,7 +63,6 @@ fn start_tool(hmodule: HINSTANCE) {
 pub unsafe extern "stdcall" fn DllMain(hmodule: HINSTANCE, reason: u32, _: *mut c_void) {
     if reason == DLL_PROCESS_ATTACH {
         trace!("DllMain()");
-
         Lazy::force(&DIRECTINPUT8CREATE);
         thread::spawn(move || start_tool(hmodule));
     }

@@ -9,6 +9,7 @@ use crate::base_addresses::*;
 
 pub struct PointerChains {
     pub pistol_ammo: Bitflag<u8>,
+    // pub cursor_show: Bitflag<u8>
 }
 
 impl Default for PointerChains {

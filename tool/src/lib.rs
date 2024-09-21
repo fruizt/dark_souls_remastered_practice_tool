@@ -1,24 +1,22 @@
-// mod util;
-mod tool;
-mod util;
+mod base_addresses;
 mod config;
 mod others;
 mod pointers;
-mod base_addresses;
+mod tool;
+mod util;
 
 use tool::Tool;
 
 use once_cell::sync::Lazy;
 use std::ffi::c_void;
 use std::thread;
-use windows::Win32::UI::WindowsAndMessaging::{MessageBoxA, MB_OK};
 
 use hudhook::hooks::dx11::ImguiDx11Hooks;
 use hudhook::tracing::{error, trace};
 use hudhook::{eject, Hudhook};
 
-use windows::core::{s, w, GUID, HRESULT, PCSTR, PCWSTR};
-use windows::Win32::Foundation::{ERROR_SUCCESS, HINSTANCE, HWND, MAX_PATH};
+use windows::core::{s, w, GUID, HRESULT, PCWSTR};
+use windows::Win32::Foundation::{HINSTANCE, MAX_PATH};
 use windows::Win32::System::LibraryLoader::{GetProcAddress, LoadLibraryW};
 use windows::Win32::System::SystemInformation::GetSystemDirectoryW;
 use windows::Win32::System::SystemServices::DLL_PROCESS_ATTACH;

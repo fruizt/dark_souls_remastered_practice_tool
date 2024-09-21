@@ -2,7 +2,7 @@ use std::sync::Mutex;
 
 use hudhook::tracing::{debug, error};
 use hudhook::ImguiRenderLoop;
-use imgui::Condition;
+use imgui::{Condition, WindowFlags};
 use tracing_subscriber::prelude::*;
 
 use crate::config::{Config, Settings};
@@ -110,14 +110,66 @@ impl Tool {
     }
 
     fn render_visible(&mut self, ui: &imgui::Ui) {
-        ui.window("Example Window")
+        ui.window("##tool_window")
             .position([16., 16.], Condition::Always)
+            .bg_alpha(0.8)
+            .flags({
+                WindowFlags::NO_TITLE_BAR
+                    | WindowFlags::NO_RESIZE
+                    | WindowFlags::NO_MOVE
+                    | WindowFlags::NO_SCROLLBAR
+                    | WindowFlags::ALWAYS_AUTO_RESIZE
+            })
             .build(|| {
                 ui.text("An example");
+
+                if ui.button_with_size("Close", [320.0, 0.0]) {
+                    self.ui_state = UiState::Closed;
+                    // self.pointers.cursor_show.set(false);
+                }
             });
     }
 
-    fn render_closed(&mut self, ui: &imgui::Ui) {}
+    fn render_closed(&mut self, ui: &imgui::Ui) {
+        ui.window("##msg_window")
+            .position([16., ui.io().display_size[1] * 0.14], Condition::Always)
+            .bg_alpha(0.0)
+            .flags({
+                WindowFlags::NO_TITLE_BAR
+                    | WindowFlags::NO_RESIZE
+                    | WindowFlags::NO_MOVE
+                    | WindowFlags::NO_SCROLLBAR
+                    | WindowFlags::ALWAYS_AUTO_RESIZE
+            })
+            .build(|| {
+                ui.text("fruizt's Dark Souls Remastered Practice Tool");
+
+                if ui.small_button("Open") {
+                    self.ui_state = UiState::MenuOpen;
+                }
+
+                ui.same_line();
+
+                if ui.small_button("Indicators") {
+                    ui.open_popup("##indicators_window");
+                }
+
+                ui.same_line();
+
+                if ui.small_button("Help") {
+                    ui.open_popup("##help_window");
+                }
+
+                ui.modal_popup_config("##help_window")
+                    .resizable(false)
+                    .movable(false)
+                    .title_bar(false)
+                    .build(|| {
+                        // self.pointers.cursor_show.set(true);
+                        ui.text(format!("Dark Souls Remaster Practice Tool",));
+                    });
+            });
+    }
 }
 
 impl ImguiRenderLoop for Tool {

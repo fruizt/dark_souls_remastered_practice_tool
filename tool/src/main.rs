@@ -1,15 +1,11 @@
 mod inject;
 
-use std::io;
-
 use hudhook::tracing::trace;
 use tracing_subscriber::filter::LevelFilter;
 
 use windows::core::PCSTR;
 use windows::Win32::Foundation::HWND;
-use windows::Win32::UI::WindowsAndMessaging::{
-    MessageBoxA, IDYES, MB_ICONERROR, MB_ICONINFORMATION, MB_OK, MB_YESNO,
-};
+use windows::Win32::UI::WindowsAndMessaging::{MessageBoxA, MB_ICONERROR, MB_OK};
 
 fn err_to_string<T: std::fmt::Display>(e: T) -> String {
     format!("Error: {}", e)
@@ -35,7 +31,6 @@ fn main() {
             );
         }
     }
-    // io::stdin().read_line(&mut String::new()).unwrap();
 }
 
 fn perform_injection() -> Result<(), String> {

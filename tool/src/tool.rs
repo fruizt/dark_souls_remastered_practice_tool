@@ -4,6 +4,7 @@ use std::time::Instant;
 use hudhook::tracing::{debug, error};
 use hudhook::ImguiRenderLoop;
 use imgui::{Condition, WindowFlags};
+use practice_tool_core::widgets::Widget;
 use tracing_subscriber::prelude::*;
 
 use crate::config::{Config, Settings};
@@ -20,7 +21,7 @@ pub(crate) struct Tool {
     settings: Settings,
     pointers: PointerChains,
     ui_state: UiState,
-
+    widgets: Vec<Box<dyn Widget>>,
     framecount: u32,
 }
 
@@ -104,10 +105,12 @@ impl Tool {
 
         let pointers = PointerChains::new();
         let settings = config.settings.clone();
+        let widgets = config.make_commands(&pointers);
 
         Tool {
             settings,
             pointers,
+            widgets,
             ui_state: UiState::MenuOpen,
             framecount: 0,
         }
@@ -125,6 +128,16 @@ impl Tool {
                     | WindowFlags::ALWAYS_AUTO_RESIZE
             })
             .build(|| {
+                if !(ui.io().want_capture_keyboard && ui.is_any_item_active()) {
+                    for w in self.widgets.iter_mut() {
+                        w.interact(ui);
+                    }
+                }
+
+                for w in self.widgets.iter_mut() {
+                    w.render(ui);
+                }
+
                 ui.text("An example");
 
                 if ui.button_with_size("Close", [320.0, 0.0]) {

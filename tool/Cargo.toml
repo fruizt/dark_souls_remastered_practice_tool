@@ -23,3 +23,4 @@ hudhook.workspace = true
 imgui.workspace = true
 once_cell.workspace = true
 windows.workspace = true
+practice-tool-core.workspace = true

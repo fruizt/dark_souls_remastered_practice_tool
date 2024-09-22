@@ -1,6 +1,6 @@
 mod base_addresses;
 mod config;
-mod others;
+mod widgets;
 mod pointers;
 mod tool;
 mod util;

@@ -1,4 +1,5 @@
 use std::sync::Mutex;
+use std::time::Instant;
 
 use hudhook::tracing::{debug, error};
 use hudhook::ImguiRenderLoop;
@@ -19,6 +20,8 @@ pub(crate) struct Tool {
     settings: Settings,
     pointers: PointerChains,
     ui_state: UiState,
+
+    framecount: u32,
 }
 
 impl Tool {
@@ -106,6 +109,7 @@ impl Tool {
             settings,
             pointers,
             ui_state: UiState::MenuOpen,
+            framecount: 0,
         }
     }
 
@@ -170,10 +174,55 @@ impl Tool {
                     });
             });
     }
+
+    fn render_hidden(&mut self, ui: &imgui::Ui) {
+        // for w in self.widgets.iter_mut() {
+        //     w.interact(ui);
+        // }
+    }
 }
 
 impl ImguiRenderLoop for Tool {
     fn render(&mut self, ui: &mut imgui::Ui) {
-        self.render_visible(ui)
+        let display = self.settings.display.is_pressed(ui);
+        let hide = self
+            .settings
+            .hide
+            .map(|k| k.is_pressed(ui))
+            .unwrap_or(false);
+
+        self.framecount += 1;
+
+        if !ui.io().want_capture_keyboard && (display || hide) {
+            self.ui_state = match (&self.ui_state, hide) {
+                (UiState::Hidden, _) => UiState::Closed,
+                (_, true) => UiState::Hidden,
+                (UiState::MenuOpen, _) => UiState::Closed,
+                (UiState::Closed, _) => UiState::MenuOpen,
+            };
+
+            match &self.ui_state {
+                UiState::MenuOpen => {}
+                UiState::Closed => { /*self.pointers.cursor_show.set(false)*/ }
+                UiState::Hidden => { /*self.pointers.cursor_show.set(false)*/ }
+            }
+        }
+
+        match &self.ui_state {
+            UiState::MenuOpen => {
+                // self.pointers.cursor_show.set(true);
+                self.render_visible(ui);
+            },
+            UiState::Closed => {
+                self.render_closed(ui);
+            },
+            UiState::Hidden => {
+                self.render_hidden(ui);
+            },
+        }
+
+        let now = Instant::now();
+
+        // self.render_visible(ui)
     }
 }

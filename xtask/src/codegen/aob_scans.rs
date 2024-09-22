@@ -6,12 +6,13 @@ use std::{
 use practice_tool_tasks::codegen::{self, aob_indirect_twice};
 
 fn patches_paths() -> impl Iterator<Item = PathBuf> {
-    let base_path = PathBuf::from(env::var("DSR_PATCHES_PATH").unwrap_or_else(|_| panic!()));
+    // let string_path = env::var("DSR_PATCHES_PATH").unwrap_or_else(|_| panic!());
+    let base_path = PathBuf::from(r"D:\SteamLibrary\steamapps\common");
     base_path
         .read_dir()
         .expect("Couldn't scan patches directory")
         .map(Result::unwrap)
-        .map(|dir| dir.path().join("DarkSoulsRemastered.exe"))
+        .map(|dir| dir.path().join("DarkSoulsRemastered.exe")) // This is wack, at least in my case
 }
 
 fn base_addresses_rs_path() -> PathBuf {
@@ -22,8 +23,8 @@ fn base_addresses_rs_path() -> PathBuf {
         .to_path_buf()
         .join("lib")
         .join("libdsr")
-        .join("src")
-        .join("codegen")
+        // .join("src")
+        // .join("codegen")
         .join("base_addresses.rs")
 }
 
@@ -35,5 +36,8 @@ pub fn get_base_addresses() {
         7,
         true,
     )];
-    codegen::codegen_base_addresses(base_addresses_rs_path(), patches_paths(), aobs)
+
+    let base_address_path = base_addresses_rs_path();
+    let patches_path = patches_paths();
+    codegen::codegen_base_addresses(base_address_path, patches_path, aobs)
 }

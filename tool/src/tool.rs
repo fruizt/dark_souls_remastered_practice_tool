@@ -171,6 +171,10 @@ impl Tool {
                     .build(|| {
                         // self.pointers.cursor_show.set(true);
                         ui.text(format!("Dark Souls Remaster Practice Tool",));
+                        if ui.button_with_size("Close", [320.0, 0.0]) {
+                            ui.close_current_popup();
+                            // self.pointers.cursor_show.set(false);
+                        }
                     });
             });
     }
@@ -212,13 +216,13 @@ impl ImguiRenderLoop for Tool {
             UiState::MenuOpen => {
                 // self.pointers.cursor_show.set(true);
                 self.render_visible(ui);
-            },
+            }
             UiState::Closed => {
                 self.render_closed(ui);
-            },
+            }
             UiState::Hidden => {
                 self.render_hidden(ui);
-            },
+            }
         }
 
         let now = Instant::now();

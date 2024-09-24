@@ -1,14 +1,16 @@
+use std::fmt::Write;
 use std::sync::Mutex;
 use std::time::Instant;
 
-use libdsr::prelude::*;
-use hudhook::tracing::{debug, error};
+use hudhook::tracing::{debug, error, info};
 use hudhook::ImguiRenderLoop;
-use imgui::{Condition, WindowFlags};
+use imgui::{Condition, StyleVar, WindowFlags};
+use libdsr::prelude::*;
+use practice_tool_core::crossbeam_channel::{self, Receiver, Sender};
 use practice_tool_core::widgets::Widget;
 use tracing_subscriber::prelude::*;
 
-use crate::config::{Config, Settings};
+use crate::config::{Config, IndicatorType, Settings};
 use crate::util;
 
 enum UiState {
@@ -20,9 +22,16 @@ enum UiState {
 pub(crate) struct Tool {
     settings: Settings,
     pointers: PointerChains,
-    ui_state: UiState,
+    version_label: String,
     widgets: Vec<Box<dyn Widget>>,
+
+    log: Vec<(Instant, String)>,
+    log_rx: Receiver<String>,
+    log_tx: Sender<String>,
+    ui_state: UiState,
+
     framecount: u32,
+    framecount_buf: String,
 }
 
 impl Tool {
@@ -104,15 +113,27 @@ impl Tool {
         }
 
         let pointers = PointerChains::new();
+        let version_label = {
+            let (maj, min, patch) = (*VERSION).into();
+            format!("Game Ver {}.{:02}.{}", maj, min, patch)
+        };
         let settings = config.settings.clone();
         let widgets = config.make_commands(&pointers);
+
+        let (log_tx, log_rx) = crossbeam_channel::unbounded();
+        info!("Initialized");
 
         Tool {
             settings,
             pointers,
+            version_label,
             widgets,
-            ui_state: UiState::MenuOpen,
+            log: Vec::new(),
+            log_tx,
+            log_rx,
+            ui_state: UiState::Closed,
             framecount: 0,
+            framecount_buf: Default::default(),
         }
     }
 
@@ -138,8 +159,6 @@ impl Tool {
                     w.render(ui);
                 }
 
-                ui.text("An example");
-
                 if ui.button_with_size("Close", [320.0, 0.0]) {
                     self.ui_state = UiState::Closed;
                     // self.pointers.cursor_show.set(false);
@@ -148,6 +167,11 @@ impl Tool {
     }
 
     fn render_closed(&mut self, ui: &imgui::Ui) {
+        let stack_tokens = [
+            ui.push_style_var(StyleVar::WindowRounding(0.)),
+            ui.push_style_var(StyleVar::FrameBorderSize(0.)),
+            ui.push_style_var(StyleVar::WindowBorderSize(0.)),
+        ];
         ui.window("##msg_window")
             .position([16., ui.io().display_size[1] * 0.14], Condition::Always)
             .bg_alpha(0.0)
@@ -171,6 +195,66 @@ impl Tool {
                     ui.open_popup("##indicators_window");
                 }
 
+                ui.modal_popup_config("##indicators_window")
+                    .resizable(false)
+                    .movable(false)
+                    .title_bar(false)
+                    .build(|| {
+                        let style = ui.clone_style();
+
+                        ui.text(
+                            "You can toggle indicators here, as\nwell as reset the frame \
+                             counter.\n\nKeep in mind that the available\nindicators and order of \
+                             them depend\non your config file.",
+                        );
+                        ui.separator();
+
+                        for indicator in &mut self.settings.indicators {
+                            let label = match indicator.indicator {
+                                IndicatorType::GameVersion => "Game Version",
+                                IndicatorType::Position => "Player Position",
+                                IndicatorType::PositionChange => "Player Velocity",
+                                IndicatorType::Igt => "IGT Timer",
+                                IndicatorType::Fps => "FPS",
+                                IndicatorType::FrameCount => "Frame Counter",
+                                IndicatorType::ImguiDebug => "ImGui Debug Info",
+                                IndicatorType::Animation => "Animation",
+                            };
+
+                            let mut state = indicator.enabled;
+
+                            if ui.checkbox(label, &mut state) {
+                                indicator.enabled = state;
+                            }
+                            if let IndicatorType::FrameCount = indicator.indicator {
+                                ui.same_line();
+
+                                let btn_reset_label = "Reset";
+                                let btn_reset_width = ui.calc_text_size(btn_reset_label)[0]
+                                    + style.frame_padding[0] * 2.0;
+
+                                ui.set_cursor_pos([
+                                    ui.content_region_max()[0] - btn_reset_width,
+                                    ui.cursor_pos()[1],
+                                ]);
+
+                                if ui.button("Reset") {
+                                    self.framecount = 0;
+                                }
+                            }
+                        }
+
+                        ui.separator();
+
+                        let btn_close_width =
+                            ui.content_region_max()[0] - style.frame_padding[0] * 2.0;
+
+                        if ui.button_with_size("Close", [btn_close_width, 0.0]) {
+                            ui.close_current_popup();
+                            // self.pointers.cursor_show.set(false);
+                        }
+                    });
+
                 ui.same_line();
 
                 if ui.small_button("Help") {
@@ -189,13 +273,88 @@ impl Tool {
                             // self.pointers.cursor_show.set(false);
                         }
                     });
+
+                ui.new_line();
+
+                for indicator in &self.settings.indicators {
+                    if !indicator.enabled {
+                        continue;
+                    }
+
+                    match indicator.indicator {
+                        IndicatorType::GameVersion => {
+                            ui.text(&self.version_label);
+                        },
+                        IndicatorType::FrameCount => {
+                            self.framecount_buf.clear();
+                            write!(self.framecount_buf, "Frame count {0}", self.framecount,).ok();
+                            ui.text(&self.framecount_buf);
+                        },
+                        // IndicatorType::ImguiDebug => {
+                        //     imgui_debug(ui);
+                        // }
+                        _ => {}
+                    }
+                }
+
+                for w in self.widgets.iter_mut() {
+                    w.render_closed(ui);
+                }
+
+                for w in self.widgets.iter_mut() {
+                    w.interact(ui);
+                }
             });
+
+        for st in stack_tokens.into_iter().rev() {
+            st.pop();
+        }
     }
 
     fn render_hidden(&mut self, ui: &imgui::Ui) {
-        // for w in self.widgets.iter_mut() {
-        //     w.interact(ui);
-        // }
+        for w in self.widgets.iter_mut() {
+            w.interact(ui);
+        }
+    }
+
+    fn render_logs(&mut self, ui: &imgui::Ui) {
+        let io = ui.io();
+
+        let [dw, dh] = io.display_size;
+        let [ww, wh] = [dw * 0.3, 14.0 * 6.];
+
+        let stack_tokens = vec![
+            ui.push_style_var(StyleVar::WindowRounding(0.)),
+            ui.push_style_var(StyleVar::FrameBorderSize(0.)),
+            ui.push_style_var(StyleVar::WindowBorderSize(0.)),
+        ];
+
+        ui.window("##logs")
+            .position_pivot([1., 1.])
+            .position([dw * 0.95, dh * 0.8], Condition::Always)
+            .flags({
+                WindowFlags::NO_TITLE_BAR
+                    | WindowFlags::NO_RESIZE
+                    | WindowFlags::NO_MOVE
+                    | WindowFlags::NO_SCROLLBAR
+                    | WindowFlags::ALWAYS_AUTO_RESIZE
+                    | WindowFlags::NO_INPUTS
+            })
+            .size([ww, wh], Condition::Always)
+            .bg_alpha(0.0)
+            .build(|| {
+                for _ in 0..5 {
+                    ui.text("");
+                }
+                for l in self.log.iter().rev().take(3).rev() {
+                    ui.text(&l.1);
+                }
+                ui.set_scroll_here_y();
+            });
+
+        for st in stack_tokens.into_iter().rev() {
+            st.pop();
+        }
     }
 }
 
@@ -238,7 +397,21 @@ impl ImguiRenderLoop for Tool {
             }
         }
 
+        for w in &mut self.widgets {
+            w.log(self.log_tx.clone());
+        }
+
         let now = Instant::now();
+        self.log.extend(
+            self.log_rx
+                .try_iter()
+                .inspect(|log| info!("{}", log))
+                .map(|l| (now, l)),
+        );
+        self.log
+            .retain(|(tm, _)| tm.elapsed() < std::time::Duration::from_secs(5));
+
+        self.render_logs(ui);
 
         // self.render_visible(ui)
     }

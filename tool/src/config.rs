@@ -1,8 +1,8 @@
 use std::str::FromStr;
 
-use libdsr::prelude::*;
 use crate::widgets::flag::flag_widget;
 use crate::widgets::open_menu::{open_menu, OpenMenuKind};
+use libdsr::prelude::*;
 use practice_tool_core::key::Key;
 use practice_tool_core::widgets::Widget;
 use serde::Deserialize;
@@ -198,10 +198,10 @@ enum CfgCommand {
     //     #[serde(rename = "item_spawner")]
     //     hotkey_load: PlaceholderOption<Key>,
     // },
-    // Flag {
-    //     flag: FlagSpec,
-    //     hotkey: Option<Key>,
-    // },
+    Flag {
+        flag: FlagSpec,
+        hotkey: Option<Key>,
+    },
     // Label {
     //     #[serde(rename = "label")]
     //     label: String,
@@ -281,7 +281,7 @@ impl TryFrom<String> for FlagSpec {
             // "inf_focus" => Ok(FlagSpec::new("Inf Focus", |c| &c.inf_focus)),
             // "inf_consumables" => Ok(FlagSpec::new("Inf Consumables", |c| &c.inf_consumables)),
             // "deathcam" => Ok(FlagSpec::new("Deathcam", |c| &c.deathcam)),
-            // "no_death" => Ok(FlagSpec::new("No death", |c| &c.no_death)),
+            "no_death" => Ok(FlagSpec::new("No death", |c| &c.no_death)),
             // "one_shot" => Ok(FlagSpec::new("One shot", |c| &c.one_shot)),
             // "evt_draw" => Ok(FlagSpec::new("Event draw", |c| &c.evt_draw)),
             // "bloodstain_draw" => {
@@ -312,9 +312,9 @@ impl TryFrom<String> for FlagSpec {
 impl CfgCommand {
     fn into_widget(self, settings: &Settings, chains: &PointerChains) -> Box<dyn Widget> {
         match self {
-            // CfgCommand::Flag { flag, hotkey: key } => {
-            //     flag_widget(&flag.label, (flag.getter)(chains).clone(), key)
-            // },
+            CfgCommand::Flag { flag, hotkey: key } => {
+                flag_widget(&flag.label, (flag.getter)(chains).clone(), key)
+            },
             // CfgCommand::Label { label } => label_widget(label.as_str()),
             // CfgCommand::SavefileManager { hotkey_load: key_load } => {
             //     savefile_manager(key_load.into_option(), settings.display)

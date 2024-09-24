@@ -113,6 +113,7 @@ impl Tool {
         }
 
         let pointers = PointerChains::new();
+        info!("pointers {:?}", pointers);
         let version_label = {
             let (maj, min, patch) = (*VERSION).into();
             format!("Game Ver {}.{:02}.{}", maj, min, patch)
@@ -284,12 +285,12 @@ impl Tool {
                     match indicator.indicator {
                         IndicatorType::GameVersion => {
                             ui.text(&self.version_label);
-                        },
+                        }
                         IndicatorType::FrameCount => {
                             self.framecount_buf.clear();
                             write!(self.framecount_buf, "Frame count {0}", self.framecount,).ok();
                             ui.text(&self.framecount_buf);
-                        },
+                        }
                         // IndicatorType::ImguiDebug => {
                         //     imgui_debug(ui);
                         // }

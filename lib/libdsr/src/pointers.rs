@@ -2,10 +2,11 @@ use log::debug;
 
 use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 
-use crate::memedit::*;
 use crate::memedit::Bitflag;
+use crate::memedit::*;
 use crate::prelude::base_addresses::BaseAddresses;
 
+#[derive(Debug)]
 pub struct PointerChains {
     pub no_death: Bitflag<u8>,
     pub no_damage: Bitflag<u8>,

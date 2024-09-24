@@ -29,13 +29,30 @@ fn base_addresses_rs_path() -> PathBuf {
 }
 
 pub fn get_base_addresses() {
-    let aobs = &[aob_indirect_twice(
-        "BaseA",
-        &["48 89 05 xx xx xx xx 8D 42"],
-        3,
-        7,
-        true,
-    )];
+    let aobs = &[
+        aob_indirect_twice("BaseA", &["48 89 05 xx xx xx xx 8D 42"], 3, 7, true),
+        aob_indirect_twice(
+            "WorldChrMan",
+            &["48 8B 05 xx xx xx xx 45 33 ED 48 8B F1 48 85 C0"],
+            3,
+            7,
+            true,
+        ),
+        aob_indirect_twice(
+            "BaseD",
+            &["48 8B 0D ?? ?? ?? ?? 48 85 C9 74 26 44 8B"],
+            3,
+            7,
+            true,
+        ),
+        aob_indirect_twice(
+            "CharacterFlags",
+            &["48 8B 05 xx xx xx xx 48 39 48 68 0F 94 C0 C3"],
+            3,
+            7,
+            true,
+        ),
+    ];
 
     let base_address_path = base_addresses_rs_path();
     let patches_path = patches_paths();

@@ -4,12 +4,18 @@
 #[derive(Debug)]
 pub struct BaseAddresses {
     pub base_a: usize,
+    pub world_chr_man: usize,
+    pub base_d: usize,
+    pub character_flags: usize,
 }
 
 impl BaseAddresses {
     pub fn with_module_base_addr(self, base: usize) -> BaseAddresses {
         BaseAddresses {
             base_a: self.base_a + base,
+            world_chr_man: self.world_chr_man + base,
+            base_d: self.base_d + base,
+            character_flags: self.character_flags + base,
         }
     }
 }
@@ -51,5 +57,7 @@ impl From<Version> for BaseAddresses {
 
 pub const BASE_ADDRESSES_1_00_0: BaseAddresses = BaseAddresses {
     base_a: 0x1a31768,
+    world_chr_man: 0x1c8a530,
+    character_flags: 0x1c77e50,
 };
 

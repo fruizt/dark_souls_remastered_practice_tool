@@ -5,7 +5,6 @@
 pub struct BaseAddresses {
     pub base_a: usize,
     pub world_chr_man: usize,
-    pub base_d: usize,
     pub character_flags: usize,
 }
 
@@ -14,7 +13,6 @@ impl BaseAddresses {
         BaseAddresses {
             base_a: self.base_a + base,
             world_chr_man: self.world_chr_man + base,
-            base_d: self.base_d + base,
             character_flags: self.character_flags + base,
         }
     }

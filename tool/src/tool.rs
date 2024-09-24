@@ -1,6 +1,7 @@
 use std::sync::Mutex;
 use std::time::Instant;
 
+use libdsr::prelude::*;
 use hudhook::tracing::{debug, error};
 use hudhook::ImguiRenderLoop;
 use imgui::{Condition, WindowFlags};
@@ -8,7 +9,6 @@ use practice_tool_core::widgets::Widget;
 use tracing_subscriber::prelude::*;
 
 use crate::config::{Config, Settings};
-use crate::pointers::PointerChains;
 use crate::util;
 
 enum UiState {

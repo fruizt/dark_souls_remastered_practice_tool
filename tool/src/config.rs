@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use crate::pointers::{Bitflag, PointerChains};
+use libdsr::prelude::*;
 use crate::widgets::flag::flag_widget;
 use crate::widgets::open_menu::{open_menu, OpenMenuKind};
 use practice_tool_core::key::Key;

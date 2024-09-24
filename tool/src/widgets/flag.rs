@@ -1,4 +1,4 @@
-use crate::pointers::Bitflag as BitflagInner;
+use libdsr::memedit::Bitflag as BitflagInner;
 use practice_tool_core::key::Key;
 use practice_tool_core::widgets::flag::{Flag, FlagWidget};
 use practice_tool_core::widgets::Widget;

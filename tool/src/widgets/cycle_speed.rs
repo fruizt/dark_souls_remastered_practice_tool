@@ -6,7 +6,7 @@ use practice_tool_core::key::Key;
 use practice_tool_core::widgets::store_value::{ReadWrite, StoreValue};
 use practice_tool_core::widgets::Widget;
 
-use crate::pointers::PointerChain;
+use libdsr::prelude::*;
 
 #[derive(Debug)]
 struct CycleSpeed {

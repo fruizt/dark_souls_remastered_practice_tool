@@ -49,7 +49,7 @@ commands = [
 log_level = "DEBUG"
 display = "0"
 hide = "rshift+0"
-show_console = false
+show_console = true
 indicators = [
   { indicator = "game_version", enabled = true },
   { indicator = "igt", enabled = true },

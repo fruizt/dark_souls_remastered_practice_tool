@@ -1,6 +1,8 @@
 use std::str::FromStr;
 
 use crate::widgets::flag::flag_widget;
+use crate::widgets::group::group;
+use crate::widgets::label::label_widget;
 use crate::widgets::open_menu::{open_menu, OpenMenuKind};
 use libdsr::prelude::*;
 use practice_tool_core::key::Key;
@@ -202,10 +204,10 @@ enum CfgCommand {
         flag: FlagSpec,
         hotkey: Option<Key>,
     },
-    // Label {
-    //     #[serde(rename = "label")]
-    //     label: String,
-    // },
+    Label {
+        #[serde(rename = "label")]
+        label: String,
+    },
     // Position {
     //     position: PlaceholderOption<Key>,
     //     save: Option<Key>,
@@ -242,11 +244,11 @@ enum CfgCommand {
     //     nudge_up: Option<Key>,
     //     nudge_down: Option<Key>,
     // },
-    // Group {
-    //     #[serde(rename = "group")]
-    //     label: String,
-    //     commands: Vec<CfgCommand>,
-    // },
+    Group {
+        #[serde(rename = "group")]
+        label: String,
+        commands: Vec<CfgCommand>,
+    },
 }
 
 #[derive(Deserialize)]
@@ -314,8 +316,8 @@ impl CfgCommand {
         match self {
             CfgCommand::Flag { flag, hotkey: key } => {
                 flag_widget(&flag.label, (flag.getter)(chains).clone(), key)
-            },
-            // CfgCommand::Label { label } => label_widget(label.as_str()),
+            }
+            CfgCommand::Label { label } => label_widget(label.as_str()),
             // CfgCommand::SavefileManager { hotkey_load: key_load } => {
             //     savefile_manager(key_load.into_option(), settings.display)
             // },
@@ -344,17 +346,49 @@ impl CfgCommand {
             // CfgCommand::Quitout { hotkey } => quitout(chains.quitout.clone(), hotkey.into_option()),
             // CfgCommand::OpenMenu { hotkey, kind } => {
             //     open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)
-            // },
+            // }
             // CfgCommand::Target { hotkey } => Box::new(Target::new(
             //     chains.current_target.clone(),
             //     chains.xa,
             //     hotkey.into_option(),
             // )),
-            // CfgCommand::Group { label, commands } => group(
-            //     label.as_str(),
-            //     commands.into_iter().map(|c| c.into_widget(settings, chains)).collect(),
-            //     settings.display,
-            // ),
+            CfgCommand::Group { label, commands } => group(
+                label.as_str(),
+                commands
+                    .into_iter()
+                    .map(|c| c.into_widget(settings, chains))
+                    .collect(),
+                settings.display,
+            ),
         }
     }
 }
+
+/*
+#[cfg(test)]
+mod tests {
+    use super::Config;
+
+    #[test]
+    fn test_parse_ok() {
+        println!(
+            "{:#?}",
+            toml::from_str::<toml::Value>(include_str!("../../jdsd_dsiii_practice_tool.toml"))
+        );
+        println!("{:#?}", Config::parse(include_str!("../../jdsd_dsiii_practice_tool.toml")));
+    }
+
+    #[test]
+    fn test_parse_errors() {
+        println!(
+            "{:#?}",
+            Config::parse(
+                r#"commands = [ { boh = 3 } ]
+                [settings]
+                log_level = "DEBUG"
+                "#
+            )
+        );
+    }
+}
+*/

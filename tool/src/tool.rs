@@ -4,7 +4,7 @@ use std::time::Instant;
 
 use hudhook::tracing::{debug, error, info};
 use hudhook::ImguiRenderLoop;
-use imgui::{Condition, StyleVar, WindowFlags};
+use imgui::{Condition, StyleVar, Ui, WindowFlags};
 use libdsr::prelude::*;
 use practice_tool_core::crossbeam_channel::{self, Receiver, Sender};
 use practice_tool_core::widgets::Widget;
@@ -291,9 +291,9 @@ impl Tool {
                             write!(self.framecount_buf, "Frame count {0}", self.framecount,).ok();
                             ui.text(&self.framecount_buf);
                         }
-                        // IndicatorType::ImguiDebug => {
-                        //     imgui_debug(ui);
-                        // }
+                        IndicatorType::ImguiDebug => {
+                            imgui_debug(ui);
+                        }
                         _ => {}
                     }
                 }
@@ -416,4 +416,19 @@ impl ImguiRenderLoop for Tool {
 
         // self.render_visible(ui)
     }
+}
+
+// Display some imgui debug information. Very expensive.
+fn imgui_debug(ui: &Ui) {
+    let io = ui.io();
+    ui.text(format!("Mouse position     {:?}", io.mouse_pos));
+    ui.text(format!("Mouse down         {:?}", io.mouse_down));
+    ui.text(format!("Want capture mouse {:?}", io.want_capture_mouse));
+    ui.text(format!("Want capture kbd   {:?}", io.want_capture_keyboard));
+    ui.text(format!("Want text input    {:?}", io.want_text_input));
+    ui.text(format!("Want set mouse pos {:?}", io.want_set_mouse_pos));
+    ui.text(format!("Any item active    {:?}", ui.is_any_item_active()));
+    ui.text(format!("Any item hovered   {:?}", ui.is_any_item_hovered()));
+    ui.text(format!("Any item focused   {:?}", ui.is_any_item_focused()));
+    ui.text(format!("Any mouse down     {:?}", ui.is_any_mouse_down()));
 }

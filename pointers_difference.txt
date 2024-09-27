@@ -1,0 +1,36 @@
+remastered:
+<CheatEntry>
+    <ID>91501</ID>
+    <Description>"No Dead"</Description>
+    <LastState Value="0" RealAddress="1B806594"/>
+    <Color>000000</Color>
+    <VariableType>Binary</VariableType>
+    <BitStart>5</BitStart>
+    <BitLength>1</BitLength>
+    <ShowAsBinary>0</ShowAsBinary>
+    <Address>BaseX</Address>
+    <Offsets>
+    <Offset>524</Offset>
+    <Offset>68</Offset>
+    </Offsets>
+</CheatEntry>
+<CheatEntry>
+
+III:
+<CheatEntry>
+    <ID>78541</ID>
+    <Description>"No Dead"</Description>
+    <LastState Value="0" RealAddress="7FFB2935D60"/>
+    <ShowAsSigned>1</ShowAsSigned>
+    <VariableType>Binary</VariableType>
+    <BitStart>2</BitStart>
+    <BitLength>1</BitLength>
+    <ShowAsBinary>0</ShowAsBinary>
+    <Address>BaseB</Address>
+    <Offsets>
+    <Offset>1C0</Offset>
+    <Offset>18</Offset>
+    <Offset>XA</Offset>
+    <Offset>80</Offset>
+    </Offsets>
+</CheatEntry>

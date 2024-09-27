@@ -23,8 +23,8 @@ impl From<BaseAddresses> for PointerChains {
         } = value;
 
         PointerChains {
-            no_death: bitflag!(0b1; character_flags, 0x80, 0x18, 0x1c0),
-            no_damage: bitflag!(0b1; character_flags, 0x80, 0x18, 0x1c0),
+            no_death: bitflag!(0b100000; character_flags, 0x68, 0x524),
+            no_damage: bitflag!(0b100000; character_flags, 0x68, 0x524),
             no_hit: bitflag!(0b1; character_flags, 0x80, 0x18, 0x1c0),
         }
     }

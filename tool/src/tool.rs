@@ -30,6 +30,8 @@ pub(crate) struct Tool {
     log_tx: Sender<String>,
     ui_state: UiState,
 
+    igt_buf: String,
+
     framecount: u32,
     framecount_buf: String,
 }
@@ -135,6 +137,7 @@ impl Tool {
             log_tx,
             log_rx,
             ui_state: UiState::Closed,
+            igt_buf: Default::default(),
             framecount: 0,
             framecount_buf: Default::default(),
         }
@@ -290,6 +293,22 @@ impl Tool {
                     }
 
                     match indicator.indicator {
+                        IndicatorType::Igt => {
+                            if let Some(igt) = self.pointers.igt.read() {
+                                let millis = (igt % 1000) / 10;
+                                let total_seconds = igt / 1000;
+                                let seconds = total_seconds % 60;
+                                let minutes = total_seconds / 60 % 60;
+                                let hours = total_seconds / 3600;
+                                self.igt_buf.clear();
+                                write!(
+                                    self.igt_buf,
+                                    "IGT {hours:02}:{minutes:02}:{seconds:02}.{millis:02}",
+                                )
+                                .ok();
+                                ui.text(&self.igt_buf);
+                            }
+                        },
                         IndicatorType::GameVersion => {
                             ui.text(&self.version_label);
                         }

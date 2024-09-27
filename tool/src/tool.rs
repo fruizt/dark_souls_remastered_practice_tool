@@ -58,6 +58,8 @@ impl Tool {
             Err(e) => (Config::default(), Some(e)),
         };
 
+        info!("Config {:?}", config);
+
         let log_file = util::get_dll_path()
             .map(|mut path| {
                 path.pop();

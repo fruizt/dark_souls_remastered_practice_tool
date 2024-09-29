@@ -45,6 +45,13 @@ pub fn get_base_addresses() {
             7,
             true,
         ),
+        aob_indirect_twice(
+            "BaseMenu",
+            &["48 8B 05 xx xx xx xx 48 63 C9 89 54 88 30"],
+            3,
+            7,
+            true,
+        ),
     ];
 
     let base_address_path = base_addresses_rs_path();

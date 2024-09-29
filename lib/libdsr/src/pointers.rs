@@ -65,6 +65,7 @@ impl From<BaseAddresses> for PointerChains {
             base_a,
             world_chr_man,
             character_flags,
+            base_menu
         } = value;
 
         let offs_igt = match *VERSION {

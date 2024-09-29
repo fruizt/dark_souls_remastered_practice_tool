@@ -1,5 +1,6 @@
 use std::mem;
 
+use libdsr::prelude::PointerChain;
 use practice_tool_core::key::Key;
 use practice_tool_core::widgets::store_value::{ReadWrite, StoreValue};
 use practice_tool_core::widgets::Widget;
@@ -21,8 +22,16 @@ struct OpenMenu {
 }
 
 impl OpenMenu {
-    pub(crate) fn new(kind: OpenMenuKind, travel_ptr: usize, attune_ptr: usize) -> Self {
-        Self { kind, travel_ptr, attune_ptr }
+    pub(crate) fn new(
+        kind: OpenMenuKind,
+        travel_ptr: usize,
+        attune_ptr: usize,
+    ) -> Self {
+        Self {
+            kind,
+            travel_ptr,
+            attune_ptr,
+        }
     }
 
     fn call(&self) {
@@ -61,5 +70,8 @@ pub(crate) fn open_menu(
     attune_ptr: usize,
     key: Option<Key>,
 ) -> Box<dyn Widget> {
-    Box::new(StoreValue::new(OpenMenu::new(kind, travel_ptr, attune_ptr), key))
+    Box::new(StoreValue::new(
+        OpenMenu::new(kind, travel_ptr, attune_ptr),
+        key,
+    ))
 }

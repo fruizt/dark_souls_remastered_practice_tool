@@ -67,7 +67,7 @@ impl From<BaseAddresses> for PointerChains {
             base_a,
             world_chr_man,
             character_flags,
-            base_menu
+            base_menu,
         } = value;
 
         let offs_igt = match *VERSION {
@@ -86,8 +86,8 @@ impl From<BaseAddresses> for PointerChains {
             no_damage: bitflag!(0b100000; character_flags, 0x68, 0x524),
             no_hit: bitflag!(0b1; character_flags, 0x80, 0x18, 0x1c0),
             igt: pointer_chain!(world_chr_man as _, offs_igt),
-            travel_ptr: base_menu + 0xC0,
-            attune_ptr: base_menu
+            travel_ptr: base_menu - 0x94,
+            attune_ptr: base_menu + 0x94,
         }
     }
 }

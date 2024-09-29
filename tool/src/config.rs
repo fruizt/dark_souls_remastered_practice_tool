@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use crate::widgets::character_stats::character_stats_edit;
+use crate::widgets::cycle_speed::cycle_speed;
 use crate::widgets::flag::flag_widget;
 use crate::widgets::group::group;
 use crate::widgets::label::label_widget;
@@ -221,11 +222,11 @@ enum CfgCommand {
     //     position: PlaceholderOption<Key>,
     //     save: Option<Key>,
     // },
-    // CycleSpeed {
-    //     #[serde(rename = "cycle_speed")]
-    //     values: Vec<f32>,
-    //     hotkey: Option<Key>,
-    // },
+    CycleSpeed {
+        #[serde(rename = "cycle_speed")]
+        values: Vec<f32>,
+        hotkey: Option<Key>,
+    },
     CharacterStats {
         #[serde(rename = "character_stats")]
         value: PlaceholderOption<Key>,
@@ -348,9 +349,9 @@ impl CfgCommand {
                 value.into_option(),
                 settings.display,
             ),
-            // CfgCommand::CycleSpeed { values, hotkey } => {
-            //     cycle_speed(values.as_slice(), chains.speed.clone(), hotkey)
-            // },
+            CfgCommand::CycleSpeed { values, hotkey } => {
+                cycle_speed(values.as_slice(), chains.speed.clone(), hotkey)
+            },
             // CfgCommand::Souls { amount, hotkey } => souls(amount, chains.souls.clone(), hotkey),
             // CfgCommand::Quitout { hotkey } => quitout(chains.quitout.clone(), hotkey.into_option()),
             // CfgCommand::OpenMenu { hotkey, kind } => {

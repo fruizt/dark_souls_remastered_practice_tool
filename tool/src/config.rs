@@ -237,11 +237,11 @@ enum CfgCommand {
         amount: u32,
         hotkey: Option<Key>,
     },
-    // OpenMenu {
-    //     #[serde(rename = "open_menu")]
-    //     kind: OpenMenuKind,
-    //     hotkey: Option<Key>,
-    // },
+    OpenMenu {
+        #[serde(rename = "open_menu")]
+        kind: OpenMenuKind,
+        hotkey: Option<Key>,
+    },
     // Quitout {
     //     #[serde(rename = "quitout")]
     //     hotkey: PlaceholderOption<Key>,
@@ -355,9 +355,9 @@ impl CfgCommand {
             }
             CfgCommand::Souls { amount, hotkey } => souls(amount, chains.souls.clone(), hotkey),
             // CfgCommand::Quitout { hotkey } => quitout(chains.quitout.clone(), hotkey.into_option()),
-            // CfgCommand::OpenMenu { hotkey, kind } => {
-            //     open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)
-            // }
+            CfgCommand::OpenMenu { hotkey, kind } => {
+                open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)
+            }
             // CfgCommand::Target { hotkey } => Box::new(Target::new(
             //     chains.current_target.clone(),
             //     chains.xa,

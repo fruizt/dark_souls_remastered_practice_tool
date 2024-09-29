@@ -2,6 +2,8 @@ commands = [
   { character_stats = true },
   { cycle_speed = [0.5, 1.0, 2.0, 5.0], hotkey = "8" },
   { souls = 10000, hotkey = "9" },
+  { open_menu = "travel" },
+  { open_menu = "attune" },
   { flag = "inf_stamina", hotkey = "2" },
   { flag = "inf_consumables", hotkey = "4" },
   { flag = "no_death", hotkey = "6" },

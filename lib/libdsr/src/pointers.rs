@@ -56,6 +56,8 @@ pub struct PointerChains {
     pub souls: PointerChain<u32>,
     pub no_hit: Bitflag<u8>,
     pub igt: PointerChain<u32>,
+    pub travel_ptr: usize,
+    pub attune_ptr: usize,
 }
 
 impl From<BaseAddresses> for PointerChains {
@@ -84,6 +86,8 @@ impl From<BaseAddresses> for PointerChains {
             no_damage: bitflag!(0b100000; character_flags, 0x68, 0x524),
             no_hit: bitflag!(0b1; character_flags, 0x80, 0x18, 0x1c0),
             igt: pointer_chain!(world_chr_man as _, offs_igt),
+            travel_ptr: base_menu + 0xC0,
+            attune_ptr: base_menu
         }
     }
 }

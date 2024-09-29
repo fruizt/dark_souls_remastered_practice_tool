@@ -1,4 +1,5 @@
 commands = [
+  { character_stats = true },
   { flag = "inf_stamina", hotkey = "2" },
   { flag = "inf_consumables", hotkey = "4" },
   { flag = "no_death", hotkey = "6" },

@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use crate::widgets::character_stats::character_stats_edit;
 use crate::widgets::flag::flag_widget;
 use crate::widgets::group::group;
 use crate::widgets::label::label_widget;
@@ -189,6 +190,14 @@ enum PlaceholderOption<T> {
     Placeholder(bool),
 }
 
+impl<T> PlaceholderOption<T> {
+    fn into_option(self) -> Option<T> {
+        match self {
+            PlaceholderOption::Data(d) => Some(d),
+            PlaceholderOption::Placeholder(_) => None,
+        }
+    }
+}
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 enum CfgCommand {
@@ -217,10 +226,10 @@ enum CfgCommand {
     //     values: Vec<f32>,
     //     hotkey: Option<Key>,
     // },
-    // CharacterStats {
-    //     #[serde(rename = "character_stats")]
-    //     value: PlaceholderOption<Key>,
-    // },
+    CharacterStats {
+        #[serde(rename = "character_stats")]
+        value: PlaceholderOption<Key>,
+    },
     // Souls {
     //     #[serde(rename = "souls")]
     //     amount: u32,
@@ -334,11 +343,11 @@ impl CfgCommand {
             // CfgCommand::NudgePosition { nudge, nudge_up, nudge_down } => {
             //     nudge_position(chains.position.clone(), nudge, nudge_up, nudge_down)
             // },
-            // CfgCommand::CharacterStats { value } => character_stats_edit(
-            //     chains.character_stats.clone(),
-            //     value.into_option(),
-            //     settings.display,
-            // ),
+            CfgCommand::CharacterStats { value } => character_stats_edit(
+                chains.character_stats.clone(),
+                value.into_option(),
+                settings.display,
+            ),
             // CfgCommand::CycleSpeed { values, hotkey } => {
             //     cycle_speed(values.as_slice(), chains.speed.clone(), hotkey)
             // },

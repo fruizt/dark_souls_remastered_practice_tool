@@ -11,7 +11,9 @@ use crate::version::VERSION;
 #[derive(Debug)]
 pub struct PointerChains {
     pub no_death: Bitflag<u8>,
+    pub inf_stamina: Bitflag<u8>,
     pub no_damage: Bitflag<u8>,
+    pub gravity: Bitflag<u8>,
     pub no_hit: Bitflag<u8>,
     pub igt: PointerChain<u32>,
 }
@@ -31,6 +33,8 @@ impl From<BaseAddresses> for PointerChains {
 
         PointerChains {
             no_death: bitflag!(0b100000; character_flags, 0x68, 0x524),
+            inf_stamina: bitflag!(0b100; character_flags, 0x68, 0x525),
+            gravity: bitflag!(0b1000000; character_flags, 0x68, 0x245),
             no_damage: bitflag!(0b100000; character_flags, 0x68, 0x524),
             no_hit: bitflag!(0b1; character_flags, 0x80, 0x18, 0x1c0),
             igt: pointer_chain!(world_chr_man as _, offs_igt),

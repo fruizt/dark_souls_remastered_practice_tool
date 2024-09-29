@@ -38,13 +38,6 @@ pub fn get_base_addresses() {
             7,
             true,
         ),
-        // aob_indirect_twice(
-        //     "BaseD",
-        //     &["48 8B 05 xx xx xx xx 80 B8 B0 00 00 00 00 0F 84 xx xx xx xx 8B 51 24 48"],
-        //     3,
-        //     7,
-        //     true,
-        // ),
         aob_indirect_twice(
             "CharacterFlags",
             &["48 8B 05 xx xx xx xx 48 39 48 68 0F 94 C0 C3"],

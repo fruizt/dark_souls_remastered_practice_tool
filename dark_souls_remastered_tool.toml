@@ -1,5 +1,7 @@
 commands = [
+  { flag = "inf_stamina", hotkey = "2" },
   { flag = "no_death", hotkey = "6" },
+  { flag = "gravity", hotkey = "f2" },
 ]
 
 [settings]

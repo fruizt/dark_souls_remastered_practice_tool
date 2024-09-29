@@ -4,3 +4,4 @@ pub(crate) mod flag;
 pub(crate) mod group;
 pub(crate) mod label;
 pub(crate) mod open_menu;
+pub(crate) mod souls;

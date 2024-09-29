@@ -6,6 +6,7 @@ use crate::widgets::flag::flag_widget;
 use crate::widgets::group::group;
 use crate::widgets::label::label_widget;
 use crate::widgets::open_menu::{open_menu, OpenMenuKind};
+use crate::widgets::souls::souls;
 use libdsr::prelude::*;
 use practice_tool_core::key::Key;
 use practice_tool_core::widgets::Widget;
@@ -231,11 +232,11 @@ enum CfgCommand {
         #[serde(rename = "character_stats")]
         value: PlaceholderOption<Key>,
     },
-    // Souls {
-    //     #[serde(rename = "souls")]
-    //     amount: u32,
-    //     hotkey: Option<Key>,
-    // },
+    Souls {
+        #[serde(rename = "souls")]
+        amount: u32,
+        hotkey: Option<Key>,
+    },
     // OpenMenu {
     //     #[serde(rename = "open_menu")]
     //     kind: OpenMenuKind,
@@ -351,8 +352,8 @@ impl CfgCommand {
             ),
             CfgCommand::CycleSpeed { values, hotkey } => {
                 cycle_speed(values.as_slice(), chains.speed.clone(), hotkey)
-            },
-            // CfgCommand::Souls { amount, hotkey } => souls(amount, chains.souls.clone(), hotkey),
+            }
+            CfgCommand::Souls { amount, hotkey } => souls(amount, chains.souls.clone(), hotkey),
             // CfgCommand::Quitout { hotkey } => quitout(chains.quitout.clone(), hotkey.into_option()),
             // CfgCommand::OpenMenu { hotkey, kind } => {
             //     open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)
@@ -374,7 +375,6 @@ impl CfgCommand {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::Config;
@@ -385,7 +385,10 @@ mod tests {
             "{:#?}",
             toml::from_str::<toml::Value>(include_str!("../../dark_souls_remastered_tool.toml"))
         );
-        println!("{:#?}", Config::parse(include_str!("../../dark_souls_remastered_tool.toml")));
+        println!(
+            "{:#?}",
+            Config::parse(include_str!("../../dark_souls_remastered_tool.toml"))
+        );
     }
 
     #[test]
@@ -401,4 +404,3 @@ mod tests {
         );
     }
 }
-

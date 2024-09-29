@@ -281,7 +281,7 @@ impl TryFrom<String> for FlagSpec {
             // "all_no_damage" => Ok(FlagSpec::new("All no damage", |c| &c.all_no_damage)),
             "inf_stamina" => Ok(FlagSpec::new("Inf Stamina", |c| &c.inf_stamina)),
             // "inf_focus" => Ok(FlagSpec::new("Inf Focus", |c| &c.inf_focus)),
-            // "inf_consumables" => Ok(FlagSpec::new("Inf Consumables", |c| &c.inf_consumables)),
+            "inf_consumables" => Ok(FlagSpec::new("Inf Consumables", |c| &c.inf_consumables)),
             // "deathcam" => Ok(FlagSpec::new("Deathcam", |c| &c.deathcam)),
             "no_death" => Ok(FlagSpec::new("No death", |c| &c.no_death)),
             // "one_shot" => Ok(FlagSpec::new("One shot", |c| &c.one_shot)),
@@ -305,7 +305,7 @@ impl TryFrom<String> for FlagSpec {
             // "debug_sphere_1" => Ok(FlagSpec::new("Debug sphere 1", |c| &c.debug_sphere_1)),
             // "debug_sphere_2" => Ok(FlagSpec::new("Debug sphere 2", |c| &c.debug_sphere_2)),
             "gravity" => Ok(FlagSpec::new("No Gravity", |c| &c.gravity)),
-            // "collision" => Ok(FlagSpec::new("No Collision", |c| &c.collision)),
+            "collision" => Ok(FlagSpec::new("No Collision", |c| &c.collision)),
             e => Err(format!("\"{}\" is not a valid flag specifier", e)),
         }
     }

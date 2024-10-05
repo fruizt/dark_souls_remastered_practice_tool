@@ -52,6 +52,13 @@ pub fn get_base_addresses() {
             7,
             true,
         ),
+        aob_indirect_twice(
+            "WorldChrDebug",
+            &["48 8B 05 ? ? ? ? 48 8B 80 F0 00 00 00 48 85 C0"],
+            3,
+            7,
+            true,
+        ),
     ];
 
     let base_address_path = base_addresses_rs_path();

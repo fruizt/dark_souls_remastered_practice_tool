@@ -7,6 +7,7 @@ use crate::widgets::group::group;
 use crate::widgets::label::label_widget;
 use crate::widgets::open_menu::{open_menu, OpenMenuKind};
 use crate::widgets::souls::souls;
+use crate::widgets::warp_menu::warp_menu;
 use libdsr::prelude::*;
 use practice_tool_core::key::Key;
 use practice_tool_core::widgets::Widget;
@@ -237,11 +238,15 @@ enum CfgCommand {
         amount: u32,
         hotkey: Option<Key>,
     },
-    OpenMenu {
-        #[serde(rename = "open_menu")]
-        kind: OpenMenuKind,
+    WarpMenu {
+        #[serde(rename = "warp_menu")]
         hotkey: Option<Key>,
     },
+    // OpenMenu {
+    //     #[serde(rename = "open_menu")]
+    //     kind: OpenMenuKind,
+    //     hotkey: Option<Key>,
+    // },
     // Quitout {
     //     #[serde(rename = "quitout")]
     //     hotkey: PlaceholderOption<Key>,
@@ -354,10 +359,11 @@ impl CfgCommand {
                 cycle_speed(values.as_slice(), chains.speed.clone(), hotkey)
             }
             CfgCommand::Souls { amount, hotkey } => souls(amount, chains.souls.clone(), hotkey),
+            CfgCommand::WarpMenu { hotkey } => warp_menu(chains.bonfire_warp_menu.clone(), hotkey),
             // CfgCommand::Quitout { hotkey } => quitout(chains.quitout.clone(), hotkey.into_option()),
-            CfgCommand::OpenMenu { hotkey, kind } => {
-                open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)
-            }
+            // CfgCommand::OpenMenu { hotkey, kind } => {
+            //     open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)
+            // }
             // CfgCommand::Target { hotkey } => Box::new(Target::new(
             //     chains.current_target.clone(),
             //     chains.xa,

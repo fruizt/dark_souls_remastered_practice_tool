@@ -294,7 +294,7 @@ impl TryFrom<String> for FlagSpec {
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         match value.as_str() {
-            // "all_no_damage" => Ok(FlagSpec::new("All no damage", |c| &c.all_no_damage)),
+            "all_no_damage" => Ok(FlagSpec::new("All no damage", |c| &c.all_no_damage)),
             "inf_stamina" => Ok(FlagSpec::new("Inf Stamina", |c| &c.inf_stamina)),
             // "inf_focus" => Ok(FlagSpec::new("Inf Focus", |c| &c.inf_focus)),
             "inf_consumables" => Ok(FlagSpec::new("Inf Consumables", |c| &c.inf_consumables)),

@@ -45,6 +45,7 @@ impl Display for CharacterStats {
 
 #[derive(Debug)]
 pub struct PointerChains {
+    pub all_no_damage: Bitflag<u8>,
     pub no_death: Bitflag<u8>,
     pub inf_stamina: Bitflag<u8>,
     pub inf_consumables: Bitflag<u8>,
@@ -56,7 +57,7 @@ pub struct PointerChains {
     pub souls: PointerChain<u32>,
     pub no_hit: Bitflag<u8>,
     pub igt: PointerChain<u32>,
-    pub bonfire_warp_menu: PointerChain<u8>
+    pub bonfire_warp_menu: PointerChain<u8>,
 }
 
 impl From<BaseAddresses> for PointerChains {
@@ -67,13 +68,16 @@ impl From<BaseAddresses> for PointerChains {
             world_chr_man,
             character_flags,
             base_menu,
+            world_chr_debug,
         } = value;
 
+        let off_all_no_damage = 9;
         let offs_igt = match *VERSION {
             Version::V1_00_0 => 0xa4,
         };
 
         PointerChains {
+            all_no_damage: bitflag!(0b1; world_chr_debug + off_all_no_damage as usize),
             no_death: bitflag!(0b100000; character_flags, 0x68, 0x524),
             inf_stamina: bitflag!(0b100; character_flags, 0x68, 0x525),
             inf_consumables: bitflag!(0b1; character_flags, 0x68, 0x527),

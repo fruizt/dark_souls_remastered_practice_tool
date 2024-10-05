@@ -7,6 +7,7 @@ pub struct BaseAddresses {
     pub world_chr_man: usize,
     pub character_flags: usize,
     pub base_menu: usize,
+    pub world_chr_debug: usize,
 }
 
 impl BaseAddresses {
@@ -16,6 +17,7 @@ impl BaseAddresses {
             world_chr_man: self.world_chr_man + base,
             character_flags: self.character_flags + base,
             base_menu: self.base_menu + base,
+            world_chr_debug: self.world_chr_debug + base,
         }
     }
 }
@@ -60,5 +62,6 @@ pub const BASE_ADDRESSES_1_00_0: BaseAddresses = BaseAddresses {
     world_chr_man: 0x1c8a530,
     character_flags: 0x1c77e50,
     base_menu: 0x1c88d98,
+    world_chr_debug: 0x1c77e88,
 };
 

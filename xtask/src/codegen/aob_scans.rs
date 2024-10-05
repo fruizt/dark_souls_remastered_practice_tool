@@ -3,7 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use practice_tool_tasks::codegen::{self, aob_indirect_twice};
+use practice_tool_tasks::codegen::{self, aob_direct, aob_indirect, aob_indirect_twice};
 
 fn patches_paths() -> impl Iterator<Item = PathBuf> {
     // let string_path = env::var("DSR_PATCHES_PATH").unwrap_or_else(|_| panic!());
@@ -59,6 +59,13 @@ pub fn get_base_addresses() {
             7,
             true,
         ),
+        // aob_indirect_twice(
+        //     "ChrDbg",
+        //     &["80 3D ? ? ? ? 00 48 8B 8F ? ? ? ? 0f B6 DB"],
+        //     2,
+        //     7,
+        //     true
+        // ),
     ];
 
     let base_address_path = base_addresses_rs_path();

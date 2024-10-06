@@ -174,7 +174,7 @@ impl Tool {
 
                 if ui.button_with_size("Close", [320.0, 0.0]) {
                     self.ui_state = UiState::Closed;
-                    // self.pointers.cursor_show.set(false);
+                    self.pointers.cursor_show.set(false);
                 }
 
                 if ui.button_with_size("Eject", [320.0, 0.0]) {
@@ -269,7 +269,7 @@ impl Tool {
 
                         if ui.button_with_size("Close", [btn_close_width, 0.0]) {
                             ui.close_current_popup();
-                            // self.pointers.cursor_show.set(false);
+                            self.pointers.cursor_show.set(false);
                         }
                     });
 
@@ -284,11 +284,11 @@ impl Tool {
                     .movable(false)
                     .title_bar(false)
                     .build(|| {
-                        // self.pointers.cursor_show.set(true);
+                        self.pointers.cursor_show.set(true);
                         ui.text(format!("Dark Souls Remaster Practice Tool",));
                         if ui.button_with_size("Close", [320.0, 0.0]) {
                             ui.close_current_popup();
-                            // self.pointers.cursor_show.set(false);
+                            self.pointers.cursor_show.set(false);
                         }
                     });
 
@@ -467,14 +467,14 @@ impl ImguiRenderLoop for Tool {
 
             match &self.ui_state {
                 UiState::MenuOpen => {}
-                UiState::Closed => { /*self.pointers.cursor_show.set(false)*/ }
-                UiState::Hidden => { /*self.pointers.cursor_show.set(false)*/ }
+                UiState::Closed => { self.pointers.cursor_show.set(false) }
+                UiState::Hidden => { self.pointers.cursor_show.set(false) }
             }
         }
 
         match &self.ui_state {
             UiState::MenuOpen => {
-                // self.pointers.cursor_show.set(true);
+                self.pointers.cursor_show.set(true);
                 self.render_visible(ui);
             }
             UiState::Closed => {

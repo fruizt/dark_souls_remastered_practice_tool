@@ -24,7 +24,7 @@ impl BaseAddresses {
 
 #[derive(Clone, Copy)]
 pub enum Version {
-    V1_00_0,
+    V1_03_1,
 }
 
 impl TryFrom<(u32, u32, u32)> for Version {
@@ -32,7 +32,7 @@ impl TryFrom<(u32, u32, u32)> for Version {
 
     fn try_from(v: (u32, u32, u32)) -> Result<Self, ()> {
         match v {
-            (1, 0, 0) => Ok(Version::V1_00_0),
+            (1, 3, 1) => Ok(Version::V1_03_1),
             (maj, min, patch) => {
                 log::error!("Unrecognized version {maj}.{min:02}.{patch}");
                 Err(())
@@ -44,7 +44,7 @@ impl TryFrom<(u32, u32, u32)> for Version {
 impl From<Version> for (u32, u32, u32) {
     fn from(v: Version) -> Self {
         match v {
-            Version::V1_00_0 => (1, 0, 0),
+            Version::V1_03_1 => (1, 3, 1),
         }
     }
 }
@@ -52,12 +52,12 @@ impl From<Version> for (u32, u32, u32) {
 impl From<Version> for BaseAddresses {
     fn from(v: Version) -> Self {
         match v {
-            Version::V1_00_0 => BASE_ADDRESSES_1_00_0,
+            Version::V1_03_1 => BASE_ADDRESSES_1_03_1,
         }
     }
 }
 
-pub const BASE_ADDRESSES_1_00_0: BaseAddresses = BaseAddresses {
+pub const BASE_ADDRESSES_1_03_1: BaseAddresses = BaseAddresses {
     base_a: 0x1a31768,
     world_chr_man: 0x1c8a530,
     character_flags: 0x1c77e50,

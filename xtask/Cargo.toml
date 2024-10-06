@@ -8,6 +8,8 @@ version.workspace = true
 [dependencies]
 anyhow = "1.0.80"
 dotenv = "0.15.0"
+pelite = "0.10.0"
+heck = "0.4.0"
 
 serde_json.workspace = true
 practice-tool-tasks.workspace = true

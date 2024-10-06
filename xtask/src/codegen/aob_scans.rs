@@ -3,7 +3,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use practice_tool_tasks::codegen::{self, aob_direct, aob_indirect, aob_indirect_twice};
+// use practice_tool_tasks::codegen::{self, aob_direct, aob_indirect, aob_indirect_twice};
+use super::codegen::{self, aob_indirect_twice};
 
 fn patches_paths() -> impl Iterator<Item = PathBuf> {
     // let string_path = env::var("DSR_PATCHES_PATH").unwrap_or_else(|_| panic!());

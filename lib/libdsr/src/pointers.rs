@@ -73,7 +73,7 @@ impl From<BaseAddresses> for PointerChains {
 
         let off_all_no_damage = 9;
         let offs_igt = match *VERSION {
-            Version::V1_00_0 => 0xa4,
+            Version::V1_03_1 => 0xa4,
         };
 
         PointerChains {

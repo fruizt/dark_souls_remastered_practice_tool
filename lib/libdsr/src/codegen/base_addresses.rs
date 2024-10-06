@@ -60,8 +60,7 @@ impl From<Version> for BaseAddresses {
 pub const BASE_ADDRESSES_1_03_1: BaseAddresses = BaseAddresses {
     base_a: 0x1a31768,
     world_chr_man: 0x1c8a530,
-    character_flags: 0x1c77e50,
+    character_flags: 0x1c77e50, // Also related to position
     base_menu: 0x1c88d98,
     world_chr_debug: 0x1c77e88,
 };
-

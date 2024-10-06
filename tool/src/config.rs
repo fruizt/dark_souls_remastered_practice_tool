@@ -5,7 +5,9 @@ use crate::widgets::cycle_speed::cycle_speed;
 use crate::widgets::flag::flag_widget;
 use crate::widgets::group::group;
 use crate::widgets::label::label_widget;
+use crate::widgets::nudge_pos::nudge_position;
 use crate::widgets::open_menu::{open_menu, OpenMenuKind};
+use crate::widgets::position::save_position;
 use crate::widgets::souls::souls;
 use crate::widgets::warp_menu::warp_menu;
 use libdsr::prelude::*;
@@ -220,10 +222,10 @@ enum CfgCommand {
         #[serde(rename = "label")]
         label: String,
     },
-    // Position {
-    //     position: PlaceholderOption<Key>,
-    //     save: Option<Key>,
-    // },
+    Position {
+        position: PlaceholderOption<Key>,
+        save: Option<Key>,
+    },
     CycleSpeed {
         #[serde(rename = "cycle_speed")]
         values: Vec<f32>,
@@ -255,11 +257,11 @@ enum CfgCommand {
     //     #[serde(rename = "target")]
     //     hotkey: PlaceholderOption<Key>,
     // },
-    // NudgePosition {
-    //     nudge: f32,
-    //     nudge_up: Option<Key>,
-    //     nudge_down: Option<Key>,
-    // },
+    NudgePosition {
+        nudge: f32,
+        nudge_up: Option<Key>,
+        nudge_down: Option<Key>,
+    },
     Group {
         #[serde(rename = "group")]
         label: String,
@@ -344,12 +346,12 @@ impl CfgCommand {
             //     key_load.into_option(),
             //     settings.display,
             // )),
-            // CfgCommand::Position { position, save } => {
-            //     save_position(chains.position.clone(), position.into_option(), save)
-            // },
-            // CfgCommand::NudgePosition { nudge, nudge_up, nudge_down } => {
-            //     nudge_position(chains.position.clone(), nudge, nudge_up, nudge_down)
-            // },
+            CfgCommand::Position { position, save } => {
+                save_position(chains.position.clone(), position.into_option(), save)
+            }
+            CfgCommand::NudgePosition { nudge, nudge_up, nudge_down } => {
+                nudge_position(chains.position.clone(), nudge, nudge_up, nudge_down)
+            },
             CfgCommand::CharacterStats { value } => character_stats_edit(
                 chains.character_stats.clone(),
                 value.into_option(),

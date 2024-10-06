@@ -30,6 +30,10 @@ pub(crate) struct Tool {
     log_tx: Sender<String>,
     ui_state: UiState,
 
+    position_bufs: [String; 4],
+    position_prev: [f32; 3],
+    position_change_buf: String,
+
     igt_buf: String,
 
     framecount: u32,
@@ -137,6 +141,9 @@ impl Tool {
             log_tx,
             log_rx,
             ui_state: UiState::Closed,
+            position_prev: Default::default(),
+            position_bufs: Default::default(),
+            position_change_buf: Default::default(),
             igt_buf: Default::default(),
             framecount: 0,
             framecount_buf: Default::default(),
@@ -293,6 +300,60 @@ impl Tool {
                     }
 
                     match indicator.indicator {
+                        IndicatorType::Position => {
+                            if let (Some([x, y, z]), Some(a)) = (
+                                self.pointers.position.1.read(),
+                                self.pointers.position.0.read(),
+                            ) {
+                                self.position_bufs.iter_mut().for_each(String::clear);
+                                write!(self.position_bufs[0], "{x:.3}").ok();
+                                write!(self.position_bufs[1], "{y:.3}").ok();
+                                write!(self.position_bufs[2], "{z:.3}").ok();
+                                write!(self.position_bufs[3], "{a:.3}").ok();
+
+                                ui.text_colored(
+                                    [0.7048, 0.1228, 0.1734, 1.],
+                                    &self.position_bufs[0],
+                                );
+                                ui.same_line();
+                                ui.text_colored(
+                                    [0.1161, 0.5327, 0.3512, 1.],
+                                    &self.position_bufs[1],
+                                );
+                                ui.same_line();
+                                ui.text_colored(
+                                    [0.1445, 0.2852, 0.5703, 1.],
+                                    &self.position_bufs[2],
+                                );
+                                ui.same_line();
+                                ui.text(&self.position_bufs[3]);
+                            }
+                        }
+                        IndicatorType::PositionChange => {
+                            if let Some([x, y, z]) = self.pointers.position.1.read() {
+                                let position_change_xyz = ((x - self.position_prev[0]).powf(2.0)
+                                    + (y - self.position_prev[1]).powf(2.0)
+                                    + (z - self.position_prev[2]).powf(2.0))
+                                .sqrt();
+
+                                let position_change_xz = ((x - self.position_prev[0]).powf(2.0)
+                                    + (z - self.position_prev[2]).powf(2.0))
+                                .sqrt();
+
+                                let position_change_y = y - self.position_prev[1];
+
+                                self.position_change_buf.clear();
+                                write!(
+                                    self.position_change_buf,
+                                    "[XYZ] {position_change_xyz:.6} | [XZ] \
+                                     {position_change_xz:.6} | [Y] {position_change_y:.6}"
+                                )
+                                .ok();
+                                ui.text(&self.position_change_buf);
+
+                                self.position_prev = [x, y, z];
+                            }
+                        }
                         IndicatorType::Igt => {
                             if let Some(igt) = self.pointers.igt.read() {
                                 let millis = (igt % 1000) / 10;
@@ -308,7 +369,7 @@ impl Tool {
                                 .ok();
                                 ui.text(&self.igt_buf);
                             }
-                        },
+                        }
                         IndicatorType::GameVersion => {
                             ui.text(&self.version_label);
                         }

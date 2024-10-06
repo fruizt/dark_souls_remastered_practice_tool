@@ -61,11 +61,11 @@ pub fn get_base_addresses() {
             true,
         ),
         // aob_indirect_twice(
-        //     "ChrDbg",
-        //     &["80 3D ? ? ? ? 00 48 8B 8F ? ? ? ? 0f B6 DB"],
-        //     2,
+        //     "WorldChrBase",
+        //     &["48 8B 05 ? ? ? ? 48 8B 48 68 48 85 C9 0F 84 ? ? ? ? 48 39 5E 10 0F 84 ? ? ? ? 48"],
+        //     3,
         //     7,
-        //     true
+        //     true,
         // ),
     ];
 

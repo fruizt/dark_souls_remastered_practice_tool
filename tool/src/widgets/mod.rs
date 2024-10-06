@@ -6,3 +6,5 @@ pub(crate) mod label;
 pub(crate) mod open_menu;
 pub(crate) mod souls;
 pub(crate) mod warp_menu;
+pub(crate) mod position;
+pub(crate) mod nudge_pos;

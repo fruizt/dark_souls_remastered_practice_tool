@@ -58,7 +58,7 @@ pub struct PointerChains {
     pub cursor_show: Bitflag<u8>,
     pub no_hit: Bitflag<u8>,
     pub igt: PointerChain<u32>,
-    pub bonfire_warp_menu: PointerChain<u8>,
+    pub bonfire_warp_menu: Bitflag<u8>,
     pub position: (PointerChain<f32>, PointerChain<[f32; 3]>),
 }
 
@@ -92,7 +92,7 @@ impl From<BaseAddresses> for PointerChains {
             no_damage: bitflag!(0b100000; character_flags, 0x68, 0x524),
             no_hit: bitflag!(0b1; character_flags, 0x80, 0x18, 0x1c0),
             igt: pointer_chain!(world_chr_man as _, offs_igt),
-            bonfire_warp_menu: pointer_chain!(base_menu, 0xc0),
+            bonfire_warp_menu: bitflag!(0b1; base_menu, 0xc0),
             position: (
                 pointer_chain!(character_flags, 0x68, 0x68, 0x28, 0x4), //angle
                 pointer_chain!(character_flags, 0x68, 0x68, 0x28, 0x10), // position

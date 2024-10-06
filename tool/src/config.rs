@@ -240,10 +240,10 @@ enum CfgCommand {
         amount: u32,
         hotkey: Option<Key>,
     },
-    WarpMenu {
-        #[serde(rename = "warp_menu")]
-        hotkey: Option<Key>,
-    },
+    // WarpMenu {
+    //     #[serde(rename = "warp_menu")]
+    //     hotkey: Option<Key>,
+    // },
     // OpenMenu {
     //     #[serde(rename = "open_menu")]
     //     kind: OpenMenuKind,
@@ -361,7 +361,7 @@ impl CfgCommand {
                 cycle_speed(values.as_slice(), chains.speed.clone(), hotkey)
             }
             CfgCommand::Souls { amount, hotkey } => souls(amount, chains.souls.clone(), hotkey),
-            CfgCommand::WarpMenu { hotkey } => warp_menu(chains.bonfire_warp_menu.clone(), hotkey),
+            // CfgCommand::WarpMenu { hotkey } => warp_menu(chains.bonfire_warp_menu.clone(), hotkey),
             // CfgCommand::Quitout { hotkey } => quitout(chains.quitout.clone(), hotkey.into_option()),
             // CfgCommand::OpenMenu { hotkey, kind } => {
             //     open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)

@@ -92,8 +92,8 @@ impl From<BaseAddresses> for PointerChains {
             igt: pointer_chain!(world_chr_man as _, offs_igt),
             bonfire_warp_menu: pointer_chain!(base_menu, 0xc0),
             position: (
-                pointer_chain!(character_flags, 0x48, 0x28, 0x4),
-                pointer_chain!(character_flags, 0x48, 0x28, 0x10),
+                pointer_chain!(character_flags, 0x68, 0x68, 0x28, 0x4), //angle
+                pointer_chain!(character_flags, 0x68, 0x68, 0x28, 0x10), // position
             ),
         }
     }

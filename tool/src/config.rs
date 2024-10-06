@@ -8,6 +8,7 @@ use crate::widgets::label::label_widget;
 use crate::widgets::nudge_pos::nudge_position;
 use crate::widgets::open_menu::{open_menu, OpenMenuKind};
 use crate::widgets::position::save_position;
+use crate::widgets::savefile_manager::savefile_manager;
 use crate::widgets::souls::souls;
 use crate::widgets::warp_menu::warp_menu;
 use libdsr::prelude::*;
@@ -206,10 +207,10 @@ impl<T> PlaceholderOption<T> {
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 enum CfgCommand {
-    // SavefileManager {
-    //     #[serde(rename = "savefile_manager")]
-    //     hotkey_load: PlaceholderOption<Key>,
-    // },
+    SavefileManager {
+        #[serde(rename = "savefile_manager")]
+        hotkey_load: PlaceholderOption<Key>,
+    },
     // ItemSpawner {
     //     #[serde(rename = "item_spawner")]
     //     hotkey_load: PlaceholderOption<Key>,
@@ -309,7 +310,6 @@ impl TryFrom<String> for FlagSpec {
             // },
             // "evt_disable" => Ok(FlagSpec::new("Event disable", |c| &c.evt_disable)),
             // "ai_disable" => Ok(FlagSpec::new("AI disable", |c| &c.ai_disable)),
-            // "ember" => Ok(FlagSpec::new("Ember", |c| &c.ember)),
             // "rend_chr" => Ok(FlagSpec::new("Render characters", |c| &c.rend_chr)),
             // "rend_obj" => Ok(FlagSpec::new("Render objects", |c| &c.rend_obj)),
             // "rend_map" => Ok(FlagSpec::new("Render map", |c| &c.rend_map)),
@@ -336,9 +336,9 @@ impl CfgCommand {
                 flag_widget(&flag.label, (flag.getter)(chains).clone(), key)
             }
             CfgCommand::Label { label } => label_widget(label.as_str()),
-            // CfgCommand::SavefileManager { hotkey_load: key_load } => {
-            //     savefile_manager(key_load.into_option(), settings.display)
-            // },
+            CfgCommand::SavefileManager { hotkey_load: key_load } => {
+                savefile_manager(key_load.into_option(), settings.display)
+            },
             // CfgCommand::ItemSpawner { hotkey_load: key_load } => Box::new(ItemSpawner::new(
             //     chains.spawn_item_func_ptr as usize,
             //     chains.map_item_man as usize,

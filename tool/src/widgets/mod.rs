@@ -8,3 +8,4 @@ pub(crate) mod souls;
 pub(crate) mod warp_menu;
 pub(crate) mod position;
 pub(crate) mod nudge_pos;
+pub(crate) mod savefile_manager;

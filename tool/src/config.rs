@@ -241,10 +241,6 @@ enum CfgCommand {
         amount: u32,
         hotkey: Option<Key>,
     },
-    // WarpMenu {
-    //     #[serde(rename = "warp_menu")]
-    //     hotkey: Option<Key>,
-    // },
     // OpenMenu {
     //     #[serde(rename = "open_menu")]
     //     kind: OpenMenuKind,
@@ -306,25 +302,25 @@ impl TryFrom<String> for FlagSpec {
             // "one_shot" => Ok(FlagSpec::new("One shot", |c| &c.one_shot)),
             // "evt_draw" => Ok(FlagSpec::new("Event draw", |c| &c.evt_draw)),
             // "bloodstain_draw" => {
-                //     Ok(FlagSpec::new("Stable/Bloodstain draw", |c| &c.bloodstain_draw))
-                // },
-                // "evt_disable" => Ok(FlagSpec::new("Event disable", |c| &c.evt_disable)),
-                // "ai_disable" => Ok(FlagSpec::new("AI disable", |c| &c.ai_disable)),
-                // "rend_chr" => Ok(FlagSpec::new("Render characters", |c| &c.rend_chr)),
-                // "rend_obj" => Ok(FlagSpec::new("Render objects", |c| &c.rend_obj)),
-                // "rend_map" => Ok(FlagSpec::new("Render map", |c| &c.rend_map)),
-                // "rend_mesh_hi" => Ok(FlagSpec::new("Collision mesh hi", |c| &c.rend_mesh_hi)),
-                // "rend_mesh_lo" => Ok(FlagSpec::new("Collision mesh lo", |c| &c.rend_mesh_lo)),
-                // "rend_mesh_hit" => Ok(FlagSpec::new("Collision mesh hit", |c| &c.rend_mesh_hit)),
-                // "debug_draw" => Ok(FlagSpec::new("Debug draw", |c| &c.debug_draw)),
-                // "hurtbox" => Ok(FlagSpec::new("Hurtbox", |c| &c.rend_hurtbox)),
-                // "all_draw_hit" => Ok(FlagSpec::new("All draw hit", |c| &c.all_draw_hit)),
-                // "ik_foot_ray" => Ok(FlagSpec::new("IK foot ray", |c| &c.ik_foot_ray)),
-                // "debug_sphere_1" => Ok(FlagSpec::new("Debug sphere 1", |c| &c.debug_sphere_1)),
-                // "debug_sphere_2" => Ok(FlagSpec::new("Debug sphere 2", |c| &c.debug_sphere_2)),
-                "gravity" => Ok(FlagSpec::new("No Gravity", |c| &c.gravity)),
-                "collision" => Ok(FlagSpec::new("No Collision", |c| &c.collision)),
-                "wrap_menu" => Ok(FlagSpec::new("Warp Menu", |c| &c.bonfire_warp_menu)),
+            //     Ok(FlagSpec::new("Stable/Bloodstain draw", |c| &c.bloodstain_draw))
+            // },
+            // "evt_disable" => Ok(FlagSpec::new("Event disable", |c| &c.evt_disable)),
+            // "ai_disable" => Ok(FlagSpec::new("AI disable", |c| &c.ai_disable)),
+            // "rend_chr" => Ok(FlagSpec::new("Render characters", |c| &c.rend_chr)),
+            // "rend_obj" => Ok(FlagSpec::new("Render objects", |c| &c.rend_obj)),
+            // "rend_map" => Ok(FlagSpec::new("Render map", |c| &c.rend_map)),
+            // "rend_mesh_hi" => Ok(FlagSpec::new("Collision mesh hi", |c| &c.rend_mesh_hi)),
+            // "rend_mesh_lo" => Ok(FlagSpec::new("Collision mesh lo", |c| &c.rend_mesh_lo)),
+            // "rend_mesh_hit" => Ok(FlagSpec::new("Collision mesh hit", |c| &c.rend_mesh_hit)),
+            // "debug_draw" => Ok(FlagSpec::new("Debug draw", |c| &c.debug_draw)),
+            // "hurtbox" => Ok(FlagSpec::new("Hurtbox", |c| &c.rend_hurtbox)),
+            // "all_draw_hit" => Ok(FlagSpec::new("All draw hit", |c| &c.all_draw_hit)),
+            // "ik_foot_ray" => Ok(FlagSpec::new("IK foot ray", |c| &c.ik_foot_ray)),
+            // "debug_sphere_1" => Ok(FlagSpec::new("Debug sphere 1", |c| &c.debug_sphere_1)),
+            // "debug_sphere_2" => Ok(FlagSpec::new("Debug sphere 2", |c| &c.debug_sphere_2)),
+            "gravity" => Ok(FlagSpec::new("No Gravity", |c| &c.gravity)),
+            "collision" => Ok(FlagSpec::new("No Collision", |c| &c.collision)),
+            "wrap_menu" => Ok(FlagSpec::new("Warp Menu", |c| &c.bonfire_warp_menu)),
             e => Err(format!("\"{}\" is not a valid flag specifier", e)),
         }
     }
@@ -337,9 +333,9 @@ impl CfgCommand {
                 flag_widget(&flag.label, (flag.getter)(chains).clone(), key)
             }
             CfgCommand::Label { label } => label_widget(label.as_str()),
-            CfgCommand::SavefileManager { hotkey_load: key_load } => {
-                savefile_manager(key_load.into_option(), settings.display)
-            },
+            CfgCommand::SavefileManager {
+                hotkey_load: key_load,
+            } => savefile_manager(key_load.into_option(), settings.display),
             // CfgCommand::ItemSpawner { hotkey_load: key_load } => Box::new(ItemSpawner::new(
             //     chains.spawn_item_func_ptr as usize,
             //     chains.map_item_man as usize,
@@ -350,9 +346,11 @@ impl CfgCommand {
             CfgCommand::Position { position, save } => {
                 save_position(chains.position.clone(), position.into_option(), save)
             }
-            CfgCommand::NudgePosition { nudge, nudge_up, nudge_down } => {
-                nudge_position(chains.position.clone(), nudge, nudge_up, nudge_down)
-            },
+            CfgCommand::NudgePosition {
+                nudge,
+                nudge_up,
+                nudge_down,
+            } => nudge_position(chains.position.clone(), nudge, nudge_up, nudge_down),
             CfgCommand::CharacterStats { value } => character_stats_edit(
                 chains.character_stats.clone(),
                 value.into_option(),
@@ -362,7 +360,6 @@ impl CfgCommand {
                 cycle_speed(values.as_slice(), chains.speed.clone(), hotkey)
             }
             CfgCommand::Souls { amount, hotkey } => souls(amount, chains.souls.clone(), hotkey),
-            // CfgCommand::WarpMenu { hotkey } => warp_menu(chains.bonfire_warp_menu.clone(), hotkey),
             // CfgCommand::Quitout { hotkey } => quitout(chains.quitout.clone(), hotkey.into_option()),
             // CfgCommand::OpenMenu { hotkey, kind } => {
             //     open_menu(kind, chains.travel_ptr, chains.attune_ptr, hotkey)

@@ -179,6 +179,7 @@ impl Tool {
 
                 if ui.button_with_size("Eject", [320.0, 0.0]) {
                     self.ui_state = UiState::Closed;
+                    self.pointers.cursor_show.set(false);
                     hudhook::eject();
                 }
             });
